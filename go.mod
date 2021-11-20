@@ -3,7 +3,7 @@ module github.com/ehwjh2010/cobra-example
 go 1.17
 
 require (
-	github.com/ehwjh2010/cobra v1.0.6
+	github.com/ehwjh2010/cobra v1.0.8
 	github.com/gin-gonic/gin v1.7.4
 	gopkg.in/yaml.v2 v2.4.0
 )
