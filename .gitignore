@@ -16,3 +16,4 @@
 .idea
 bin/
 config_local.yaml
+logs/
