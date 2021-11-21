@@ -1,5 +1,5 @@
 env: dev
-mode: debug
+debug: true
 application: cobra-example
 server:
   host:

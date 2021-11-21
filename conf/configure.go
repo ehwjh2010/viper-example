@@ -14,7 +14,7 @@ import (
 
 type Config struct {
 	Env          string        `yaml:"env" json:"env"`                 //环境标识
-	Mode         string        `yaml:"mode" json:"mode"`               //cobra框架 Mode标识
+	Debug        bool          `yaml:"debug" json:"debug"`             //Debug
 	Application  string        `yaml:"application" json:"application"` //应用名
 	ServerConfig client.Server `yaml:"server" json:"server"`
 	LogConfig    client.Log    `yaml:"log" json:"log"`
