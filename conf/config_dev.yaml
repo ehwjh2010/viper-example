@@ -10,7 +10,7 @@ log:
   level: DEBUG
   enableConsole: true
   rotated: true
-  fileDir: ./logs
+  fileDir: ~/logs
   maxSize: 1
   maxAge: 7
   localtime: false
