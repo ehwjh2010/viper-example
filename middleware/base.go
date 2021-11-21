@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var Middllewares = []gin.HandlerFunc{
+var Middlewares = []gin.HandlerFunc{
 	middleware.CobraZap(nil, false, config.DefaultTimePattern),
 	middleware.RecoveryWithZap(),
 }

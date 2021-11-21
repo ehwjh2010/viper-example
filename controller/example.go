@@ -1,42 +1,41 @@
 package controller
 
-//import (
-//	"cobra/conf"
-//	"cobra/enum"
-//	dao2 "cobra/example/src/dao"
-//	model2 "cobra/example/src/dao/model"
-//	"cobra/log"
-//	"cobra/types"
-//	"cobra/util"
-//	"github.com/gin-gonic/gin"
-//	"strconv"
-//)
-//
-//func GetProjectConfig(c *gin.Context) {
-//	c.JSON(200, conf.Conf)
-//
-//	log.Info("你好")
-//}
-//
-////AddRecord 添加记录
-//func AddRecord(c *gin.Context) {
-//
-//	product := model2.Product{
-//		Name:       "appleNormalStr",
-//		Price:      30,
-//		TotalCount: 10000,
-//		Brand:      types.NewStr("oooooo"),
-//	}
-//
-//	err := dao2.DBClient.AddRecord(&product)
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(10000), util.ResultWithMessage("Insert failed!"))
-//		return
-//	}
-//
-//	util.Success(c, product)
-//}
+import (
+	"github.com/ehwjh2010/cobra-example/conf"
+	"github.com/ehwjh2010/cobra-example/resource"
+	"github.com/ehwjh2010/cobra-example/resource/dao"
+	"github.com/ehwjh2010/cobra/http/response"
+	"github.com/ehwjh2010/cobra/log"
+	"github.com/ehwjh2010/cobra/types"
+	"github.com/gin-gonic/gin"
+	"strconv"
+)
+
+func GetProjectConfig(c *gin.Context) {
+	log.Info("你好")
+	response.Success(c, conf.Conf)
+}
+
+//AddRecord 添加记录
+func AddRecord(c *gin.Context) {
+
+	product := dao.Product{
+		Name:       "Cake",
+		Price:      30,
+		TotalCount: 10000,
+		Brand:      types.NewStr("MMMMMMMM"),
+	}
+
+	err := resource.DBClient.AddRecord(&product)
+
+	if err != nil {
+		//util.Fail(c, util.ResultWithCode(10000), util.ResultWithMessage("Insert failed!"))
+		return
+	}
+
+	response.Success(c, product)
+}
+
 //
 //func UpdateRecord(c *gin.Context) {
 //	product := model2.NewProduct()
@@ -62,33 +61,58 @@ package controller
 //	util.Success(c, product)
 //}
 //
-////QueryById 通过ID查询
-//func QueryById(c *gin.Context) {
-//
-//	id := c.Param("id")
-//
-//	idInt, err := strconv.Atoi(id)
-//
-//	if err != nil {
-//		util.InvalidRequest(c, "Id must be int")
-//		return
-//	}
-//
-//	product := model2.NewProduct()
-//
-//	exist, err := dao2.DBClient.QueryById(int64(idInt), product)
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	if !exist {
-//		util.Success(c, nil)
-//		return
-//	}
-//
-//	util.Success(c, product)
-//}
+
+//QueryByIds 通过ID查询
+func QueryByIds(c *gin.Context) {
+
+	id := c.Query("id")
+
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		response.InvalidRequest(c, "Id must be int")
+		return
+	}
+
+	var product []dao.Product
+
+	_, err = resource.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
+	if err != nil {
+		//util.Fail(c, util.ResultWithCode(1000))
+		return
+	}
+
+	response.Success(c, product)
+}
+
+//QueryById 通过ID查询
+func QueryById(c *gin.Context) {
+
+	id := c.Param("id")
+
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		response.InvalidRequest(c, "Id must be int")
+		return
+	}
+
+	product := dao.NewProduct()
+
+	exist, err := resource.DBClient.QueryById(int64(idInt), &product)
+	if err != nil {
+		//util.Fail(c, util.ResultWithCode(1000))
+		return
+	}
+
+	if !exist {
+		response.Success(c, nil)
+		return
+	}
+
+	response.Success(c, product)
+}
+
 //
 //func QueryByCond(c *gin.Context) {
 //	names := c.QueryArray("name")
