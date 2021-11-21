@@ -8,15 +8,23 @@ import (
 	"github.com/ehwjh2010/cobra/log"
 	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 )
+
+// @Summary 测试接口
+// @Description 描述信息
+// @Success 200 {string} string    "ok"
+// @Router /helloworld [get]
+func Helloworld(c *gin.Context)  {
+	c.JSON(http.StatusOK,"helloworld")
+}
 
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
 	response.Success(c, conf.Conf)
 }
 
-//AddRecord 添加记录
 func AddRecord(c *gin.Context) {
 
 	product := dao.Product{

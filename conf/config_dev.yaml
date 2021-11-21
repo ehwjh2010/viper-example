@@ -1,10 +1,12 @@
 env: dev
 debug: true
 application: cobra-example
-server:
-  host:
-  port: 9090
-  shutDownTimeout: 5
+
+host:
+port: 9090
+shutDownTimeout: 5
+
+swagger: true
 
 log:
   level: DEBUG

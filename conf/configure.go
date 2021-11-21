@@ -13,13 +13,16 @@ import (
 )
 
 type Config struct {
-	Env          string        `yaml:"env" json:"env"`                 //环境标识
-	Debug        bool          `yaml:"debug" json:"debug"`             //Debug
-	Application  string        `yaml:"application" json:"application"` //应用名
-	ServerConfig client.Server `yaml:"server" json:"server"`
-	LogConfig    client.Log    `yaml:"log" json:"log"`
-	DBConfig     client.DB     `yaml:"db" json:"db"`
-	CacheConfig  client.Cache  `yaml:"cache" json:"cache"`
+	Env             string       `yaml:"env" json:"env"`                         //环境标识
+	Host            string       `yaml:"host" json:"host"`                       //地址
+	Port            int          `yaml:"port" json:"port"`                       //端口
+	ShutDownTimeout int          `yaml:"shutDownTimeout" json:"shutDownTimeout"` //优雅重启, 接收到相关信号后, 处理请求的最长时间, 单位: 秒， 默认5s
+	Application     string       `yaml:"application" json:"application"`         //应用名
+	Debug           bool         `yaml:"debug" json:"debug"`                     //debug
+	Swagger         bool         `yaml:"swagger" json:"swagger"`                 //是否启动swagger
+	LogConfig       client.Log   `yaml:"log" json:"log"`
+	DBConfig        client.DB    `yaml:"db" json:"db"`
+	CacheConfig     client.Cache `yaml:"cache" json:"cache"`
 }
 
 var Conf Config
