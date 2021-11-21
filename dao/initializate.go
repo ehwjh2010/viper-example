@@ -14,7 +14,7 @@ var (
 )
 
 //LoadDB 加载DB
-func LoadDB(config *client.DBConfig) {
+func LoadDB(config *client.DB) {
 
 	dbClient, err := mysql.InitMysql(config)
 
@@ -31,7 +31,7 @@ func CloseDB() error {
 }
 
 //LoadCache 加载缓存
-func LoadCache(config *client.CacheConfig) {
+func LoadCache(config *client.Cache) {
 
 	cacheClient, err := cache.InitCache(config)
 	if err != nil {
