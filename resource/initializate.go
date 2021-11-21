@@ -1,11 +1,10 @@
-package dao
+package resource
 
 import (
 	"github.com/ehwjh2010/cobra/client"
 	"github.com/ehwjh2010/cobra/db/cache"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/db/rdb/mysql"
-	"log"
 )
 
 var (
@@ -14,15 +13,16 @@ var (
 )
 
 //LoadDB 加载DB
-func LoadDB(config *client.DB) {
+func LoadDB(config *client.DB) error {
 
 	dbClient, err := mysql.InitMysql(config)
 
 	if err != nil {
-		log.Panicf("Load mysql failed!, err: %v", err)
+		return err
 	}
 
 	DBClient = dbClient
+	return nil
 }
 
 //CloseDB 关闭DB
@@ -31,14 +31,15 @@ func CloseDB() error {
 }
 
 //LoadCache 加载缓存
-func LoadCache(config *client.Cache) {
+func LoadCache(config *client.Cache) error {
 
 	cacheClient, err := cache.InitCache(config)
 	if err != nil {
-		log.Panicf("Load redis failed!, err: %v\n", err)
+		return err
 	}
 
 	CacheClient = cacheClient
+	return nil
 }
 
 //CloseCache 关闭缓存
