@@ -60,3 +60,5 @@ require (
 	gorm.io/driver/postgres v1.2.2 // indirect
 	gorm.io/gorm v1.22.3 // indirect
 )
+
+replace github.com/ehwjh2010/cobra => ../

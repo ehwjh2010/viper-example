@@ -142,7 +142,7 @@ func QueryById(c *gin.Context) {
 
 	exist, err := resource.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
-		//util.Fail(c, util.ResultWithCode(1000))
+		response.Fail(c, 2000, "系统错误", response.RespWithStatus(400))
 		return
 	}
 
@@ -186,12 +186,7 @@ func QueryByCond(c *gin.Context) {
 
 	count, _ := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products)
 
-	response.Success(c, response.NewPageable(
-		products,
-		response.PageableWithPage(page),
-		response.PageableWithPageSize(pageSize),
-		response.PageableWithTotalCount(count)),
-	)
+	response.Success(c, response.NewPageable(products, page, pageSize, count))
 }
 //
 ////QueryCountByCond 查询数量
