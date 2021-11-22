@@ -11,9 +11,15 @@ func Bind(engine *gin.Engine) {
 
 	{
 		api.GET("/helloworld", controller.Helloworld)
-		api.GET("/test", controller.GetProjectConfig)
-		api.GET("/test/:id", controller.QueryById)
-		api.GET("/test/ids", controller.QueryByIds)
-		api.GET("/test/add", controller.AddRecord)
+	}
+	
+	test := api.Group("/test")
+	
+	{
+		test.GET("", controller.GetProjectConfig)
+		test.GET("/:id", controller.QueryById)
+		test.GET("/ids", controller.QueryByIds)
+		test.GET("/cond", controller.QueryByCond)
+		test.GET("/add", controller.AddRecord)
 	}
 }

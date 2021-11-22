@@ -3,35 +3,52 @@ package controller
 import (
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
-	"github.com/ehwjh2010/cobra-example/resource/dao"
+	"github.com/ehwjh2010/cobra-example/resource/model"
+	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/http/response"
 	"github.com/ehwjh2010/cobra/log"
-	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-// @Summary 测试接口
-// @Description 描述信息
-// @Success 200 {string} string    "ok"
-// @Router /helloworld [get]
+// Helloworld 测试接口
+// @Title helloworld
+// @Description helloworld
+// @Tags test
+// @Success 200 {string} helloworld
+// @Router	/helloworld [get]
 func Helloworld(c *gin.Context)  {
 	c.JSON(http.StatusOK,"helloworld")
 }
 
+// GetProjectConfig 获取项目配置
+// @Summary GetProjectConfig
+// @Description 获取项目配置
+// @Accept json
+// @Tags project,config
+// @Router /test [get]
+// @Success 200 {object} response.Result{data=conf.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
 	response.Success(c, conf.Conf)
 }
 
+
+// AddRecord 添加商品
+// @Summary AddRecord
+// @Description 添加商品
+// @Accept json
+// @Produce json
+// @Tags add,product
+// @Success 200 {object} response.Result{data=model.Product} "商品数据"
+// @Router /test/add [get]
 func AddRecord(c *gin.Context) {
 
-	product := dao.Product{
+	product := model.Product{
 		Name:       "Cake",
 		Price:      30,
 		TotalCount: 10000,
-		Brand:      types.NewStr("MMMMMMMM"),
 	}
 
 	err := resource.DBClient.AddRecord(&product)
@@ -70,7 +87,15 @@ func AddRecord(c *gin.Context) {
 //}
 //
 
-//QueryByIds 通过ID查询
+// QueryByIds 通过ID列表查询
+// @Summary QueryByIds
+// @Description 通过ID列表查询
+// @Accept json
+// @Produce json
+// @Tags product
+// @Param id query int true "商品ID"
+// @Success 200 {object} response.Result{data=[]model.Product} "商品数据"
+// @Router /test/ids [get]
 func QueryByIds(c *gin.Context) {
 
 	id := c.Query("id")
@@ -82,7 +107,7 @@ func QueryByIds(c *gin.Context) {
 		return
 	}
 
-	var product []dao.Product
+	var product []model.Product
 
 	_, err = resource.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
 	if err != nil {
@@ -93,7 +118,15 @@ func QueryByIds(c *gin.Context) {
 	response.Success(c, product)
 }
 
-//QueryById 通过ID查询
+// QueryById 通过ID查询
+// @Summary QueryById
+// @Description 通过ID查询
+// @Accept json
+// @Produce json
+// @Tags product
+// @Param id path int true "主键"
+// @Success 200 {object} response.Result{data=model.Product} "商品数据"
+// @Router /test/{id} [get]
 func QueryById(c *gin.Context) {
 
 	id := c.Param("id")
@@ -105,7 +138,7 @@ func QueryById(c *gin.Context) {
 		return
 	}
 
-	product := dao.NewProduct()
+	product := model.NewProduct()
 
 	exist, err := resource.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
@@ -121,35 +154,45 @@ func QueryById(c *gin.Context) {
 	response.Success(c, product)
 }
 
-//
-//func QueryByCond(c *gin.Context) {
-//	names := c.QueryArray("name")
-//
-//	page, _ := strconv.Atoi(c.Query("page"))
-//	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
-//	cond := util.NewQueryCondition()
-//
-//	cond.SetPage(page).SetPageSize(pageSize).AddSort(util.NewOrder("price", util.OrderWithSort(enum.DESC))).AddSort(util.NewOrder("id"))
-//
-//	cond.SetTotalCount(true)
-//
-//	cond.AddWhere(util.NewNotEqWhere("total_count", 90))
-//
-//	if len(names) > 0 {
-//		cond.AddWhere(util.NewInWhere("name", names))
-//	}
-//
-//	var products []*model2.Product
-//
-//	count, _ := dao2.DBClient.Query(model2.NewProduct().TableName(), cond, &products)
-//
-//	util.Success(c, map[string]interface{}{
-//		"totalCount": count,
-//		"products":   &products,
-//		"page":       page,
-//		"pageSize":   pageSize,
-//	})
-//}
+// QueryByCond 通过条件查询
+// @Summary QueryByCond
+// @Description 通过条件查询
+// @Accept json
+// @Produce json
+// @Tags product
+// @Param name query string false "商品名称"
+// @Param page query int true "页数"
+// @Param pageSize query int true "每页数量"
+// @Success 200 {object} response.Result{data=response.Pageable{rows=[]model.Product}} "商品数据"
+// @Router /test/cond [get]
+func QueryByCond(c *gin.Context) {
+	names := c.QueryArray("name")
+
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	cond := rdb.NewQueryCondition()
+
+	cond.SetPage(page).SetPageSize(pageSize).AddSort(rdb.NewDescOrder("price"))
+
+	cond.SetTotalCount(true)
+
+	//cond.AddWhere(rdb.NewNotEqWhere("total_count", 90))
+
+	if len(names) > 0 {
+		cond.AddWhere(rdb.NewInWhere("name", names))
+	}
+
+	var products []model.Product
+
+	count, _ := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products)
+
+	response.Success(c, response.NewPageable(
+		products,
+		response.PageableWithPage(page),
+		response.PageableWithPageSize(pageSize),
+		response.PageableWithTotalCount(count)),
+	)
+}
 //
 ////QueryCountByCond 查询数量
 //func QueryCountByCond(c *gin.Context) {
