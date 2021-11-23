@@ -20,6 +20,15 @@ func Bind(engine *gin.Engine) {
 		test.GET("/:id", controller.QueryById)
 		test.GET("/ids", controller.QueryByIds)
 		test.GET("/cond", controller.QueryByCond)
+		test.GET("/count", controller.QueryCountByCond)
 		test.GET("/add", controller.AddRecord)
+		test.GET("/update", controller.UpdateRecord)
+	}
+
+	cache := test.Group("/cache")
+
+	{
+		cache.GET("/set", controller.SetCache)
+		cache.GET("/get", controller.GetCache)
 	}
 }

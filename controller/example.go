@@ -4,9 +4,11 @@ import (
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
+	"github.com/ehwjh2010/cobra/config"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/http/response"
 	"github.com/ehwjh2010/cobra/log"
+	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -15,7 +17,7 @@ import (
 // Helloworld 测试接口
 // @Title helloworld
 // @Description helloworld
-// @Tags test
+// @Tags helloworld
 // @Success 200 {string} helloworld
 // @Router	/helloworld [get]
 func Helloworld(c *gin.Context)  {
@@ -26,14 +28,13 @@ func Helloworld(c *gin.Context)  {
 // @Summary GetProjectConfig
 // @Description 获取项目配置
 // @Accept json
-// @Tags project,config
+// @Tags project
 // @Router /test [get]
 // @Success 200 {object} response.Result{data=conf.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
 	response.Success(c, conf.Conf)
 }
-
 
 // AddRecord 添加商品
 // @Summary AddRecord
@@ -61,31 +62,35 @@ func AddRecord(c *gin.Context) {
 	response.Success(c, product)
 }
 
-//
-//func UpdateRecord(c *gin.Context) {
-//	product := model2.NewProduct()
-//
-//	id, err := strconv.Atoi(c.Param("id"))
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	product.TotalCount = 99
-//	product.Price = 9900
-//	err = dao2.DBClient.UpdateById(product.TableName(), int64(id), product)
-//
-//	if err != nil {
-//		//util.Fail(
-//		//	c,
-//		//	util.ResultWithCode(2000),
-//		//	util.ResultWithMessage(fmt.Sprintf("Update failed, %+v\n", err)))
-//		return
-//	}
-//
-//	util.Success(c, product)
-//}
-//
+// UpdateRecord 更新商品
+// @Summary UpdateRecord
+// @Description 更新商品
+// @Accept json
+// @Produce json
+// @Tags update,product
+// @Param id query int true "商品ID"
+// @Success 200 {object} response.Result{data=map[string]bool} "商品数据"
+// @Router /test/update [get]
+func UpdateRecord(c *gin.Context) {
+	product := model.NewProduct()
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		response.InvalidRequest(c, "ID必须为整数")
+		return
+	}
+
+	product.TotalCount = 99
+	product.Price = 9900
+	err = resource.DBClient.UpdateById(product.TableName(), int64(id), product)
+
+	if err != nil {
+		response.Success(c, map[string]bool{"ok": false})
+	} else {
+		response.Success(c, map[string]bool{"ok": true})
+	}
+}
+
 
 // QueryByIds 通过ID列表查询
 // @Summary QueryByIds
@@ -142,7 +147,7 @@ func QueryById(c *gin.Context) {
 
 	exist, err := resource.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
-		response.Fail(c, 2000, "系统错误", response.RespWithStatus(400))
+		response.Fail(c, 2000, "系统错误")
 		return
 	}
 
@@ -188,65 +193,75 @@ func QueryByCond(c *gin.Context) {
 
 	response.Success(c, response.NewPageable(products, page, pageSize, count))
 }
-//
-////QueryCountByCond 查询数量
-//func QueryCountByCond(c *gin.Context) {
-//	product := model2.NewProduct()
-//
-//	cond := util.NewQueryCondition()
-//
-//	cond.AddWhere(util.NewEqWhere("total_count", 10))
-//	cond.AddWhere(util.NewEqWhere("price", 30))
-//
-//	count, err := dao2.DBClient.QueryCount(product.TableName(), cond)
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(991111))
-//		return
-//	}
-//
-//	util.Success(c, map[string]int64{"count": count})
-//}
-//
-////QueryByCache 查缓存
-//func QueryByCache(c *gin.Context) {
-//	name := c.Param("name")
-//
-//	nameValue, err := dao2.CacheClient.GetString(name)
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	util.Success(c, map[string]types.NullString{"name": nameValue})
-//
-//}
-//
-////SetJob 查缓存
-//func SetJob(c *gin.Context) {
-//	job := c.Param("job")
-//
-//	err := dao2.CacheClient.Set("job", job, 300)
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	util.Success(c, map[string]bool{"ok": true})
-//
-//}
-//
-////GetJob 查缓存
-//func GetJob(c *gin.Context) {
-//	job, err := dao2.CacheClient.GetString("job")
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	util.Success(c, map[string]types.NullString{"job": job})
-//
-//}
+
+// QueryCountByCond 查询数量
+// @Summary QueryCountByCond
+// @Description 查询数量
+// @Accept json
+// @Produce json
+// @Tags product,count
+// @Success 200 {object} response.Result{data=map[string]int} "商品数量"
+// @Router /test/count [get]
+func QueryCountByCond(c *gin.Context) {
+	product := model.NewProduct()
+
+	cond := rdb.NewQueryCondition()
+
+	//cond.AddWhere(rdb.NewEqWhere("total_count", 10))
+	//cond.AddWhere(rdb.NewEqWhere("price", 30))
+
+	count, err := resource.DBClient.QueryCount(product.TableName(), cond)
+
+	if err != nil {
+		response.Fail(c, 90000, "查询结果失败")
+		return
+	} else {
+		response.Success(c, map[string]int64{"count": count})
+	}
+}
+
+// GetCache 查缓存
+// @Summary GetCache
+// @Description 查缓存
+// @Accept json
+// @Produce json
+// @Tags cache
+// @Param name query string true "缓存Key"
+// @Success 200 {object} response.Result{data=map[string]string} "商品数量"
+// @Router /test/cache/get [get]
+func GetCache(c *gin.Context) {
+	name := c.Query("name")
+
+	value, err := resource.CacheClient.GetString(name)
+
+	if err != nil {
+		//util.Fail(c, util.ResultWithCode(1000))
+		return
+	}
+
+	response.Success(c, map[string]types.NullString{name: value})
+
+}
+
+// SetCache 设置缓存
+// @Summary SetCache
+// @Description 设置缓存
+// @Accept json
+// @Produce json
+// @Tags cache
+// @Param name query string true "缓存Key"
+// @Success 200 {object} response.Result{data=map[string]bool} "商品数量"
+// @Router /test/cache/set [get]
+func SetCache(c *gin.Context) {
+	name := c.Query("name")
+
+	err := resource.CacheClient.Set(name, "job", config.FiveMinute)
+
+	if err != nil {
+		//util.Fail(c, util.ResultWithCode(1000))
+		return
+	}
+
+	response.Success(c, map[string]bool{"ok": true})
+
+}

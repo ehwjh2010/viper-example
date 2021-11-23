@@ -36,7 +36,7 @@ var doc = `{
             "get": {
                 "description": "helloworld",
                 "tags": [
-                    "test"
+                    "helloworld"
                 ],
                 "responses": {
                     "200": {
@@ -55,8 +55,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "project",
-                    "config"
+                    "project"
                 ],
                 "summary": "GetProjectConfig",
                 "responses": {
@@ -108,6 +107,100 @@ var doc = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/model.Product"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/test/cache/get": {
+            "get": {
+                "description": "查缓存",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cache"
+                ],
+                "summary": "QueryByCache",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "缓存Key",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "商品数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/test/cache/set": {
+            "get": {
+                "description": "设置缓存",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cache"
+                ],
+                "summary": "SetJob",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "缓存Key",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "商品数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "boolean"
+                                            }
                                         }
                                     }
                                 }
@@ -189,6 +282,45 @@ var doc = `{
                 }
             }
         },
+        "/test/count": {
+            "get": {
+                "description": "查询数量",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product",
+                    "count"
+                ],
+                "summary": "QueryCountByCond",
+                "responses": {
+                    "200": {
+                        "description": "商品数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/test/ids": {
             "get": {
                 "description": "通过ID列表查询",
@@ -226,6 +358,54 @@ var doc = `{
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/model.Product"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/test/update": {
+            "get": {
+                "description": "更新商品",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "update",
+                    "product"
+                ],
+                "summary": "UpdateRecord",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "商品ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "商品数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "boolean"
                                             }
                                         }
                                     }

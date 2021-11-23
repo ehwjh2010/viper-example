@@ -24,7 +24,7 @@ db:
   user: jh
   password: 123456
   dbType: mysql
-  database: demo_shiyanlou
+  database: example
   location: UTC
   tablePrefix:
   singularTable: true

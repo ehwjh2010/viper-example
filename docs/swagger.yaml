@@ -211,7 +211,7 @@ paths:
           schema:
             type: string
       tags:
-      - test
+      - helloworld
   /test:
     get:
       consumes:
@@ -230,7 +230,6 @@ paths:
       summary: GetProjectConfig
       tags:
       - project
-      - config
   /test/{id}:
     get:
       consumes:
@@ -278,6 +277,62 @@ paths:
       tags:
       - add
       - product
+  /test/cache/get:
+    get:
+      consumes:
+      - application/json
+      description: 查缓存
+      parameters:
+      - description: 缓存Key
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 商品数量
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: string
+                  type: object
+              type: object
+      summary: QueryByCache
+      tags:
+      - cache
+  /test/cache/set:
+    get:
+      consumes:
+      - application/json
+      description: 设置缓存
+      parameters:
+      - description: 缓存Key
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 商品数量
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      summary: SetJob
+      tags:
+      - cache
   /test/cond:
     get:
       consumes:
@@ -320,6 +375,29 @@ paths:
       summary: QueryByCond
       tags:
       - product
+  /test/count:
+    get:
+      consumes:
+      - application/json
+      description: 查询数量
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 商品数量
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: integer
+                  type: object
+              type: object
+      summary: QueryCountByCond
+      tags:
+      - product
+      - count
   /test/ids:
     get:
       consumes:
@@ -347,5 +425,34 @@ paths:
               type: object
       summary: QueryByIds
       tags:
+      - product
+  /test/update:
+    get:
+      consumes:
+      - application/json
+      description: 更新商品
+      parameters:
+      - description: 商品ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 商品数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      summary: UpdateRecord
+      tags:
+      - update
       - product
 swagger: "2.0"
