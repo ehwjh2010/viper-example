@@ -232,14 +232,14 @@ func QueryCountByCond(c *gin.Context) {
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
 
-	value, err := resource.CacheClient.GetString(name)
+	value, err := resource.CacheClient.GetInt(name)
 
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(1000))
 		return
 	}
 
-	response.Success(c, map[string]types.NullString{name: value})
+	response.Success(c, map[string]types.NullInt{name: value})
 
 }
 
@@ -250,12 +250,14 @@ func GetCache(c *gin.Context) {
 // @Produce json
 // @Tags cache
 // @Param name query string true "缓存Key"
+// @Param value query bool true "缓存值"
 // @Success 200 {object} response.Result{data=map[string]bool} "商品数量"
 // @Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
+	value, _ := strconv.Atoi(c.Query("value"))
 
-	err := resource.CacheClient.Set(name, "job", config.FiveMinute)
+	err := resource.CacheClient.Set(name, value, config.FiveMinute)
 
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(1000))

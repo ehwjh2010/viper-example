@@ -7,7 +7,7 @@ import (
 )
 
 var Middlewares = []gin.HandlerFunc{
-	middleware.CobraZap(nil, false, config.DefaultTimePattern),
+	middleware.AccessLog(nil, false, config.DefaultTimePattern),
 	middleware.RecoveryWithZap(),
 	middleware.Cors(middleware.OriginOpt("*")),
 }
