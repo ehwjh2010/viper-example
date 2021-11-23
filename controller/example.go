@@ -4,11 +4,9 @@ import (
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
-	"github.com/ehwjh2010/cobra/config"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/http/response"
 	"github.com/ehwjh2010/cobra/log"
-	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -231,16 +229,16 @@ func QueryCountByCond(c *gin.Context) {
 // @Router /test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
+	//field := c.Query("field")
 
-	value, err := resource.CacheClient.GetInt(name)
+	value, err := resource.CacheClient.SMembersStr(name)
 
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(1000))
 		return
 	}
 
-	response.Success(c, map[string]types.NullInt{name: value})
-
+	response.Success(c, value)
 }
 
 // SetCache 设置缓存
@@ -255,9 +253,9 @@ func GetCache(c *gin.Context) {
 // @Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
-	value, _ := strconv.Atoi(c.Query("value"))
+	value := c.Query("value")
 
-	err := resource.CacheClient.Set(name, value, config.FiveMinute)
+	err := resource.CacheClient.SAdd(name, value)
 
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(1000))
@@ -265,5 +263,4 @@ func SetCache(c *gin.Context) {
 	}
 
 	response.Success(c, map[string]bool{"ok": true})
-
 }
