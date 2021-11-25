@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/ehwjh2010/cobra/client"
 	"github.com/ehwjh2010/cobra/log"
-	"github.com/ehwjh2010/cobra/util/fileutils"
-	"github.com/ehwjh2010/cobra/util/pathutils"
-	"github.com/ehwjh2010/cobra/util/strutils"
+	"github.com/ehwjh2010/cobra/util/file"
+	"github.com/ehwjh2010/cobra/util/path"
+	"github.com/ehwjh2010/cobra/util/str"
 	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
@@ -38,7 +38,7 @@ func LoadConfig() {
 		panic(err)
 	}
 
-	yamlFile, err := fileutils.ReadFile(configFilePath)
+	yamlFile, err := file.ReadFile(configFilePath)
 	if err != nil {
 		panic(err)
 	}
@@ -61,9 +61,9 @@ func ensureConfigPath() (string, error) {
 	currentDir, _ := os.Getwd()
 
 	//优先读取本地配置, 利于本地开发以及线上配置
-	localConfigPath := pathutils.PathJoin(currentDir, "conf", "config_local.yaml")
+	localConfigPath := path.PathJoin(currentDir, "conf", "config_local.yaml")
 
-	exist, err := pathutils.EnsurePathExist(localConfigPath)
+	exist, err := path.EnsurePathExist(localConfigPath)
 
 	if err != nil {
 		return "", err
@@ -78,9 +78,9 @@ func ensureConfigPath() (string, error) {
 
 	configFileName := fmt.Sprintf("config_%s.yaml", strings.ToLower(env))
 
-	configFilePath := pathutils.PathJoin(currentDir, "conf", configFileName)
+	configFilePath := path.PathJoin(currentDir, "conf", configFileName)
 
-	exist, err = pathutils.EnsurePathExist(configFilePath)
+	exist, err = path.EnsurePathExist(configFilePath)
 
 	if err != nil {
 		return "", err
@@ -95,7 +95,7 @@ func ensureConfigPath() (string, error) {
 func getEnv() string {
 	env := strings.ToLower(os.Getenv("ENV"))
 
-	if strutils.IsEmptyStr(env) {
+	if str.IsEmptyStr(env) {
 		env = "dev"
 	}
 

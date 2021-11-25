@@ -50,7 +50,9 @@ func AddRecord(c *gin.Context) {
 		TotalCount: 10000,
 	}
 
-	err := resource.DBClient.AddRecord(&product)
+	conn := resource.DBClient.GetConn()
+
+	err := conn.Create(&product)
 
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(10000), util.ResultWithMessage("Insert failed!"))

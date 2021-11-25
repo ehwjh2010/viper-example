@@ -7,7 +7,7 @@ import (
 	"github.com/ehwjh2010/cobra-example/middleware"
 	"github.com/ehwjh2010/cobra-example/service"
 	"github.com/ehwjh2010/cobra/client"
-	"github.com/ehwjh2010/cobra/util/structutils"
+	"github.com/ehwjh2010/cobra/util/object"
 )
 
 var setting client.Setting
@@ -36,7 +36,7 @@ func main() {
 
 func init() {
 	conf.LoadConfig()
-	structutils.CopyProperties(&conf.Conf, &setting)
+	object.CopyProperties(&conf.Conf, &setting)
 	setting.Middlewares = middleware.Middlewares
 	setting.OnStartUp = service.OnStart
 	setting.OnShutDown = service.OnShutDown
