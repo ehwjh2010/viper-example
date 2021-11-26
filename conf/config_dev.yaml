@@ -5,6 +5,7 @@ application: cobra-example
 host:
 port: 9090
 shutDownTimeout: 5
+language: cn
 
 swagger: true
 

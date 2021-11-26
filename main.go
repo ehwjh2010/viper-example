@@ -29,7 +29,7 @@ var setting client.Setting
 func main() {
 	app := cobra.Cobra(setting)
 
-	Bind(app.Engine)
+	Bind(app.Engine())
 
 	app.Run()
 }
