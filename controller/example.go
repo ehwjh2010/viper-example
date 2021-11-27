@@ -1,12 +1,15 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
 	"github.com/ehwjh2010/cobra/db/rdb"
-	"github.com/ehwjh2010/cobra/http/response"
+	"github.com/ehwjh2010/cobra/extend/ginext"
+	"github.com/ehwjh2010/cobra/extend/ginext/response"
 	"github.com/ehwjh2010/cobra/log"
+	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -18,8 +21,8 @@ import (
 // @Tags helloworld
 // @Success 200 {string} helloworld
 // @Router	/helloworld [get]
-func Helloworld(c *gin.Context)  {
-	c.JSON(http.StatusOK,"helloworld")
+func Helloworld(c *gin.Context) {
+	c.JSON(http.StatusOK, "helloworld")
 }
 
 // GetProjectConfig 获取项目配置
@@ -50,12 +53,11 @@ func AddRecord(c *gin.Context) {
 		TotalCount: 10000,
 	}
 
-	conn := resource.DBClient.GetConn()
-
-	err := conn.Create(&product)
+	err := resource.DBClient.AddRecord(&product)
 
 	if err != nil {
-		//util.Fail(c, util.ResultWithCode(10000), util.ResultWithMessage("Insert failed!"))
+		log.Info(err.Error())
+		response.Fail(c, 1000, "插入失败")
 		return
 	}
 
@@ -90,7 +92,6 @@ func UpdateRecord(c *gin.Context) {
 		response.Success(c, map[string]bool{"ok": true})
 	}
 }
-
 
 // QueryByIds 通过ID列表查询
 // @Summary QueryByIds
@@ -191,7 +192,7 @@ func QueryByCond(c *gin.Context) {
 
 	count, _ := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products)
 
-	response.Success(c, response.NewPageable(products, page, pageSize, count))
+	response.Success(c, types.NewPageable(products, page, pageSize, count))
 }
 
 // QueryCountByCond 查询数量
@@ -257,12 +258,42 @@ func SetCache(c *gin.Context) {
 	name := c.Query("name")
 	value := c.Query("value")
 
-	err := resource.CacheClient.SAdd(name, value)
+	resource.CacheClient.SAdd(name, value)
 
-	if err != nil {
-		//util.Fail(c, util.ResultWithCode(1000))
+	response.Success(c, map[string]bool{"ok": true})
+}
+
+type User struct {
+	Name     string    `json:"name" binding:"required,gte=2"`
+	Age      int       `json:"age" binding:"required,gt=0,lte=200"`
+	Addr     []Address `json:"addr" binding:"dive"`
+	Pwd      string    `json:"pwd" binding:"gte=5"`
+	CheckPwd string    `json:"checkPwd" binding:"required_with=Pwd,eqfield=Pwd"`
+}
+
+type Address struct {
+	Province string `json:"province" binding:"required"`
+	City     string `json:"city" binding:"city"`
+	Street   string `json:"street" binding:"required"`
+}
+
+// ValidateUser	测试校验器
+// @Summary 	ValidateUser
+// @Description 测试校验器
+// @Accept 		json
+// @Produce 	json
+// @Tags 		validate
+// @Param 		user body User true "用户姓名"
+// @Success 	200 {object} response.Result{data=map[string]bool} "校验是否成功"
+// @Router 		/validate [post]
+func ValidateUser(c *gin.Context) {
+	var user User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		response.InvalidRequest(c, ginext.Translate(err))
 		return
 	}
+
+	log.Info(fmt.Sprintf("%+v", user))
 
 	response.Success(c, map[string]bool{"ok": true})
 }

@@ -128,7 +128,7 @@ var doc = `{
                 "tags": [
                     "cache"
                 ],
-                "summary": "QueryByCache",
+                "summary": "GetCache",
                 "parameters": [
                     {
                         "type": "string",
@@ -175,12 +175,19 @@ var doc = `{
                 "tags": [
                     "cache"
                 ],
-                "summary": "SetJob",
+                "summary": "SetCache",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "缓存Key",
                         "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "缓存值",
+                        "name": "value",
                         "in": "query",
                         "required": true
                     }
@@ -459,6 +466,98 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/validate": {
+            "post": {
+                "description": "测试校验器",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "validate"
+                ],
+                "summary": "ValidateUser",
+                "parameters": [
+                    {
+                        "description": "用户姓名",
+                        "name": "name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "年龄",
+                        "name": "age",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "密码",
+                        "name": "pwd",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "确认密码",
+                        "name": "checkPwd",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "用户地址",
+                        "name": "addr",
+                        "in": "body",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controller.Address"
+                            }
+                        }
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "缓存值",
+                        "name": "value",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "校验是否成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -648,6 +747,24 @@ var doc = `{
                 "swagger": {
                     "description": "是否启动swagger",
                     "type": "boolean"
+                }
+            }
+        },
+        "controller.Address": {
+            "type": "object",
+            "required": [
+                "province",
+                "street"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
                 }
             }
         },

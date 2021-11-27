@@ -138,6 +138,18 @@ definitions:
         description: 是否启动swagger
         type: boolean
     type: object
+  controller.Address:
+    properties:
+      city:
+        type: string
+      province:
+        type: string
+      street:
+        type: string
+    required:
+    - province
+    - street
+    type: object
   model.Product:
     properties:
       brand:
@@ -302,7 +314,7 @@ paths:
                     type: string
                   type: object
               type: object
-      summary: QueryByCache
+      summary: GetCache
       tags:
       - cache
   /test/cache/set:
@@ -316,6 +328,11 @@ paths:
         name: name
         required: true
         type: string
+      - description: 缓存值
+        in: query
+        name: value
+        required: true
+        type: boolean
       produces:
       - application/json
       responses:
@@ -330,7 +347,7 @@ paths:
                     type: boolean
                   type: object
               type: object
-      summary: SetJob
+      summary: SetCache
       tags:
       - cache
   /test/cond:
@@ -455,4 +472,61 @@ paths:
       tags:
       - update
       - product
+  /validate:
+    post:
+      consumes:
+      - application/json
+      description: 测试校验器
+      parameters:
+      - description: 用户姓名
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: 年龄
+        in: body
+        name: age
+        required: true
+        schema:
+          type: integer
+      - description: 密码
+        in: body
+        name: pwd
+        schema:
+          type: string
+      - description: 确认密码
+        in: body
+        name: checkPwd
+        schema:
+          type: string
+      - description: 用户地址
+        in: body
+        name: addr
+        schema:
+          items:
+            $ref: '#/definitions/controller.Address'
+          type: array
+      - description: 缓存值
+        in: query
+        name: value
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 校验是否成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      summary: ValidateUser
+      tags:
+      - validate
 swagger: "2.0"

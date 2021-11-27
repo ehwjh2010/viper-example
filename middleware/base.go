@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/ehwjh2010/cobra/config"
-	"github.com/ehwjh2010/cobra/middleware"
+	"github.com/ehwjh2010/cobra/extend/ginext/middleware"
 	"github.com/gin-gonic/gin"
 )
 

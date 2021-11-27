@@ -1,7 +1,7 @@
 package resource
 
 import (
-	"github.com/ehwjh2010/cobra/client"
+	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra/db/cache"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/db/rdb/mysql"
@@ -13,9 +13,9 @@ var (
 )
 
 //LoadDB 加载DB
-func LoadDB(config *client.DB) error {
+func LoadDB() error {
 
-	dbClient, err := mysql.InitMysql(config)
+	dbClient, err := mysql.InitMysql(&conf.Conf.DBConfig)
 
 	if err != nil {
 		return err
@@ -31,9 +31,9 @@ func CloseDB() error {
 }
 
 //LoadCache 加载缓存
-func LoadCache(config *client.Cache) error {
+func LoadCache() error {
 
-	cacheClient, err := cache.InitCache(config)
+	cacheClient, err := cache.InitCache(&conf.Conf.CacheConfig)
 	if err != nil {
 		return err
 	}

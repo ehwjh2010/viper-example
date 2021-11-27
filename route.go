@@ -11,6 +11,7 @@ func Bind(engine *gin.Engine) {
 
 	{
 		api.GET("/helloworld", controller.Helloworld)
+		api.POST("/validate", controller.ValidateUser)
 	}
 	
 	test := api.Group("/test")

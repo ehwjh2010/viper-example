@@ -19,6 +19,7 @@ type Config struct {
 	ShutDownTimeout int          `yaml:"shutDownTimeout" json:"shutDownTimeout"` //优雅重启, 接收到相关信号后, 处理请求的最长时间, 单位: 秒， 默认5s
 	Application     string       `yaml:"application" json:"application"`         //应用名
 	Debug           bool         `yaml:"debug" json:"debug"`                     //debug
+	Language        string       `json:"language" yaml:"language"`               //校验错误返回的语言
 	Swagger         bool         `yaml:"swagger" json:"swagger"`                 //是否启动swagger
 	LogConfig       client.Log   `yaml:"log" json:"log"`
 	DBConfig        client.DB    `yaml:"db" json:"db"`

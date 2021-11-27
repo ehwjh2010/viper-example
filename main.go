@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/ehwjh2010/cobra"
 	"github.com/ehwjh2010/cobra-example/conf"
 	_ "github.com/ehwjh2010/cobra-example/docs"
 	"github.com/ehwjh2010/cobra-example/middleware"
 	"github.com/ehwjh2010/cobra-example/service"
 	"github.com/ehwjh2010/cobra/client"
+	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/util/object"
 )
 
@@ -27,7 +27,7 @@ var setting client.Setting
 // @host 127.0.0.1:9090
 // @BasePath /api
 func main() {
-	app := cobra.Cobra(setting)
+	app := ginext.Cobra(setting)
 
 	Bind(app.Engine())
 
