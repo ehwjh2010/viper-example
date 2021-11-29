@@ -5,6 +5,7 @@ import (
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
+	"github.com/ehwjh2010/cobra/config"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/extend/ginext/response"
@@ -221,47 +222,53 @@ func QueryCountByCond(c *gin.Context) {
 	}
 }
 
-// GetCache 查缓存
-// @Summary GetCache
-// @Description 查缓存
-// @Accept json
-// @Produce json
-// @Tags cache
-// @Param name query string true "缓存Key"
-// @Success 200 {object} response.Result{data=map[string]string} "商品数量"
-// @Router /test/cache/get [get]
-//func GetCache(c *gin.Context) {
-//	name := c.Query("name")
-//	//field := c.Query("field")
-//
-//	value, err := resource.CacheClient.SMembersStr(name)
-//
-//	if err != nil {
-//		//util.Fail(c, util.ResultWithCode(1000))
-//		return
-//	}
-//
-//	response.Success(c, value)
-//}
+//GetCache 查缓存
+//@Summary GetCache
+//@Description 查缓存
+//@Accept json
+//@Produce json
+//@Tags cache
+//@Param name query string true "缓存Key"
+//@Success 200 {object} response.Result{data=map[string]string} "商品数量"
+//@Router /test/cache/get [get]
+func GetCache(c *gin.Context) {
+	name := c.Query("name")
+	//field := c.Query("field")
 
-// SetCache 设置缓存
-// @Summary SetCache
-// @Description 设置缓存
-// @Accept json
-// @Produce json
-// @Tags cache
-// @Param name query string true "缓存Key"
-// @Param value query bool true "缓存值"
-// @Success 200 {object} response.Result{data=map[string]bool} "商品数量"
-// @Router /test/cache/set [get]
-//func SetCache(c *gin.Context) {
-//	name := c.Query("name")
-//	value := c.Query("value")
-//
-//	resource.CacheClient.SAdd(name, value)
-//
-//	response.Success(c, map[string]bool{"ok": true})
-//}
+	value, err := resource.CacheClient.GetStr(name)
+
+	if err != nil {
+		log.Error(err.Error())
+		response.Fail(c, 30000, "操作redis失败")
+		return
+	}
+
+	response.Success(c, value)
+}
+
+//SetCache 设置缓存
+//@Summary SetCache
+//@Description 设置缓存
+//@Accept json
+//@Produce json
+//@Tags cache
+//@Param name query string true "缓存Key"
+//@Param value query bool true "缓存值"
+//@Success 200 {object} response.Result{data=map[string]bool} "商品数量"
+//@Router /test/cache/set [get]
+func SetCache(c *gin.Context) {
+	name := c.Query("name")
+	value := c.Query("value")
+
+	err := resource.CacheClient.Set(name, value, config.FiveSecond)
+
+	if err != nil {
+		response.Fail(c, 30000, "操作redis失败")
+		return
+	}
+
+	response.Success(c, map[string]bool{"ok": true})
+}
 
 type User struct {
 	Name     string    `json:"name" binding:"required,gte=2"`

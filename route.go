@@ -13,9 +13,9 @@ func Bind(engine *gin.Engine) {
 		api.GET("/helloworld", controller.Helloworld)
 		api.POST("/validate", controller.ValidateUser)
 	}
-	
+
 	test := api.Group("/test")
-	
+
 	{
 		test.GET("", controller.GetProjectConfig)
 		test.GET("/:id", controller.QueryById)
@@ -26,10 +26,10 @@ func Bind(engine *gin.Engine) {
 		test.GET("/update", controller.UpdateRecord)
 	}
 
-	//cache := test.Group("/cache")
-	//
-	//{
-	//	cache.GET("/set", controller.SetCache)
-	//	cache.GET("/get", controller.GetCache)
-	//}
+	cache := test.Group("/cache")
+
+	{
+		cache.GET("/set", controller.SetCache)
+		cache.GET("/get", controller.GetCache)
+	}
 }
