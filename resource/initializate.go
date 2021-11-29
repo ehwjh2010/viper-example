@@ -2,14 +2,13 @@ package resource
 
 import (
 	"github.com/ehwjh2010/cobra-example/conf"
-	"github.com/ehwjh2010/cobra/db/cache"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/db/rdb/mysql"
 )
 
 var (
 	DBClient    *rdb.DBClient
-	CacheClient *cache.RedisClient
+	//CacheClient *cache.RedisClient
 )
 
 //LoadDB 加载DB
@@ -33,16 +32,17 @@ func CloseDB() error {
 //LoadCache 加载缓存
 func LoadCache() error {
 
-	cacheClient, err := cache.InitCache(&conf.Conf.CacheConfig)
-	if err != nil {
-		return err
-	}
-
-	CacheClient = cacheClient
+	//cacheClient, err := cache.InitCache(&conf.Conf.CacheConfig)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//CacheClient = cacheClient
 	return nil
 }
 
 //CloseCache 关闭缓存
 func CloseCache() error {
-	return CacheClient.Close()
+	//return CacheClient.Close()
+	return nil
 }

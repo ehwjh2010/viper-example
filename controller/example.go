@@ -230,19 +230,19 @@ func QueryCountByCond(c *gin.Context) {
 // @Param name query string true "缓存Key"
 // @Success 200 {object} response.Result{data=map[string]string} "商品数量"
 // @Router /test/cache/get [get]
-func GetCache(c *gin.Context) {
-	name := c.Query("name")
-	//field := c.Query("field")
-
-	value, err := resource.CacheClient.SMembersStr(name)
-
-	if err != nil {
-		//util.Fail(c, util.ResultWithCode(1000))
-		return
-	}
-
-	response.Success(c, value)
-}
+//func GetCache(c *gin.Context) {
+//	name := c.Query("name")
+//	//field := c.Query("field")
+//
+//	value, err := resource.CacheClient.SMembersStr(name)
+//
+//	if err != nil {
+//		//util.Fail(c, util.ResultWithCode(1000))
+//		return
+//	}
+//
+//	response.Success(c, value)
+//}
 
 // SetCache 设置缓存
 // @Summary SetCache
@@ -254,14 +254,14 @@ func GetCache(c *gin.Context) {
 // @Param value query bool true "缓存值"
 // @Success 200 {object} response.Result{data=map[string]bool} "商品数量"
 // @Router /test/cache/set [get]
-func SetCache(c *gin.Context) {
-	name := c.Query("name")
-	value := c.Query("value")
-
-	resource.CacheClient.SAdd(name, value)
-
-	response.Success(c, map[string]bool{"ok": true})
-}
+//func SetCache(c *gin.Context) {
+//	name := c.Query("name")
+//	value := c.Query("value")
+//
+//	resource.CacheClient.SAdd(name, value)
+//
+//	response.Success(c, map[string]bool{"ok": true})
+//}
 
 type User struct {
 	Name     string    `json:"name" binding:"required,gte=2"`

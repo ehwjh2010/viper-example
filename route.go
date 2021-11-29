@@ -26,10 +26,10 @@ func Bind(engine *gin.Engine) {
 		test.GET("/update", controller.UpdateRecord)
 	}
 
-	cache := test.Group("/cache")
-
-	{
-		cache.GET("/set", controller.SetCache)
-		cache.GET("/get", controller.GetCache)
-	}
+	//cache := test.Group("/cache")
+	//
+	//{
+	//	cache.GET("/set", controller.SetCache)
+	//	cache.GET("/get", controller.GetCache)
+	//}
 }
