@@ -5,7 +5,6 @@ import (
 	"github.com/ehwjh2010/cobra-example/conf"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
-	"github.com/ehwjh2010/cobra/config"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/extend/ginext/response"
@@ -14,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // Helloworld 测试接口
@@ -235,7 +235,7 @@ func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	//field := c.Query("field")
 
-	value, err := resource.CacheClient.GetStr(name)
+	value, err := resource.CacheClient.GetTime(name)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -258,9 +258,10 @@ func GetCache(c *gin.Context) {
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
-	value := c.Query("value")
+	//value := c.Query("value")
+	value := time.Now()
 
-	err := resource.CacheClient.Set(name, value, config.FiveSecond)
+	err := resource.CacheClient.SetWithNoExpire(name, value)
 
 	if err != nil {
 		response.Fail(c, 30000, "操作redis失败")
