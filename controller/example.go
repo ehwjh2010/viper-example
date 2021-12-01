@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 // Helloworld 测试接口
@@ -235,7 +234,7 @@ func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	//field := c.Query("field")
 
-	value, err := resource.CacheClient.GetTime(name)
+	value, err := resource.CacheClient.GetInt(name)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -258,17 +257,18 @@ func GetCache(c *gin.Context) {
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
-	//value := c.Query("value")
-	value := time.Now()
+	//value, _ := strconv.Atoi(c.Query("value"))
+	//value := time.Now()
 
-	err := resource.CacheClient.SetWithNoExpire(name, value)
+	v, err := resource.CacheClient.Decr(name)
 
 	if err != nil {
+		log.Error(err.Error())
 		response.Fail(c, 30000, "操作redis失败")
 		return
 	}
 
-	response.Success(c, map[string]bool{"ok": true})
+	response.Success(c, v)
 }
 
 type User struct {
