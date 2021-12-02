@@ -234,7 +234,7 @@ func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	//field := c.Query("field")
 
-	value, err := resource.CacheClient.GetInt(name)
+	value, err := resource.CacheClient.LAllMembersInt(name)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -257,10 +257,9 @@ func GetCache(c *gin.Context) {
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
-	//value, _ := strconv.Atoi(c.Query("value"))
-	//value := time.Now()
+	value := c.Query("value")
 
-	v, err := resource.CacheClient.Decr(name)
+	err := resource.CacheClient.LPush(name, value)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -268,7 +267,7 @@ func SetCache(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, v)
+	response.Success(c, true)
 }
 
 type User struct {
