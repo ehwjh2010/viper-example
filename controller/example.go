@@ -234,7 +234,7 @@ func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	//field := c.Query("field")
 
-	value, err := resource.CacheClient.LAllMembersInt(name)
+	value, err := resource.CacheClient.LAllMemberInt(name)
 
 	if err != nil {
 		log.Error(err.Error())
