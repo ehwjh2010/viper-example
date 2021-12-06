@@ -3,7 +3,7 @@ module github.com/ehwjh2010/cobra-example
 go 1.17
 
 require (
-	github.com/ehwjh2010/cobra v1.1.1
+	github.com/ehwjh2010/cobra v1.1.2
 	github.com/gin-gonic/gin v1.7.4
 	github.com/swaggo/swag v1.7.4
 	gopkg.in/yaml.v2 v2.4.0
@@ -65,4 +65,4 @@ require (
 	gorm.io/gorm v1.22.3 // indirect
 )
 
-replace github.com/ehwjh2010/cobra => ../
+replace github.com/ehwjh2010/cobra => ./../cobra

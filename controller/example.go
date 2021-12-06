@@ -232,9 +232,8 @@ func QueryCountByCond(c *gin.Context) {
 //@Router /test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
-	//field := c.Query("field")
 
-	value, err := resource.CacheClient.LAllMemberInt(name)
+	v, err := resource.CacheClient.HGetAll(name)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -242,7 +241,8 @@ func GetCache(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, value)
+	response.Success(c, v)
+
 }
 
 //SetCache 设置缓存
@@ -257,9 +257,21 @@ func GetCache(c *gin.Context) {
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
-	value := c.Query("value")
 
-	err := resource.CacheClient.LPush(name, value)
+	product := model.NewProduct()
+	_, _ = resource.DBClient.QueryById(2, &product)
+
+	//value := map[string]interface{}{
+	//	"name": "tom",
+	//	"age": 18,
+	//	"job": "IT",
+	//	"money": 22.22,
+	//	"on_study": false,
+	//	"time": time.Now(),
+	//	//"product": product,
+	//}
+
+	err := resource.CacheClient.HSetJson(name, "product", product)
 
 	if err != nil {
 		log.Error(err.Error())
