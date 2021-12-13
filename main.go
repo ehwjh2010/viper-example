@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ehwjh2010/cobra-example/conf"
+	"github.com/ehwjh2010/cobra-example/configs"
 	_ "github.com/ehwjh2010/cobra-example/docs"
 	"github.com/ehwjh2010/cobra-example/middleware"
 	"github.com/ehwjh2010/cobra-example/service"
@@ -35,8 +35,7 @@ func main() {
 }
 
 func init() {
-	conf.LoadConfig()
-	object.CopyProperties(&conf.Conf, &setting)
+	object.CopyProperties(&configs.Conf, &setting)
 	setting.Middlewares = middleware.Middlewares
 	setting.OnStartUp = service.OnStart
 	setting.OnShutDown = service.OnShutDown

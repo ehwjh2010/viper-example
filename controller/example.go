@@ -2,14 +2,13 @@ package controller
 
 import (
 	"fmt"
-	"github.com/ehwjh2010/cobra-example/conf"
+	"github.com/ehwjh2010/cobra-example/configs"
 	"github.com/ehwjh2010/cobra-example/resource"
 	"github.com/ehwjh2010/cobra-example/resource/model"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/extend/ginext/response"
 	"github.com/ehwjh2010/cobra/log"
-	"github.com/ehwjh2010/cobra/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -34,7 +33,7 @@ func Helloworld(c *gin.Context) {
 // @Success 200 {object} response.Result{data=conf.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
-	response.Success(c, conf.Conf)
+	response.Success(c, configs.Conf)
 }
 
 // AddRecord 添加商品
@@ -172,27 +171,29 @@ func QueryById(c *gin.Context) {
 // @Success 200 {object} response.Result{data=response.Pageable{rows=[]model.Product}} "商品数据"
 // @Router /test/cond [get]
 func QueryByCond(c *gin.Context) {
-	names := c.QueryArray("name")
+	name := c.Query("name")
 
-	page, _ := strconv.Atoi(c.Query("page"))
-	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	//page, _ := strconv.Atoi(c.Query("page"))
+	//pageSize, _ := strconv.Atoi(c.Query("pageSize"))
 	cond := rdb.NewQueryCondition()
 
-	cond.SetPage(page).SetPageSize(pageSize).AddSort(rdb.NewDescOrder("price"))
+	//cond.SetPage(page).SetPageSize(pageSize).AddSort(rdb.NewDescOrder("price"))
 
-	cond.SetTotalCount(true)
+	//cond.SetTotalCount(true)
 
-	//cond.AddWhere(rdb.NewNotEqWhere("total_count", 90))
+	//w := rdb.NewEqWhere("name", name).Or(rdb.NewEqWhere("name", "banana")).Or(rdb.NewEqWhere("price", 30))
+	//
+	//cond.AddWhere(w)
 
-	if len(names) > 0 {
-		cond.AddWhere(rdb.NewInWhere("name", names))
-	}
+	cond.AddWhere(rdb.NewLeftLikeWhere("name", name))
 
 	var products []model.Product
 
-	count, _ := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products)
-
-	response.Success(c, types.NewPageable(products, page, pageSize, count))
+	if _, err := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products); err == nil {
+		response.Success(c, products)
+	} else {
+		response.Success(c, nil)
+	}
 }
 
 // QueryCountByCond 查询数量
@@ -232,8 +233,10 @@ func QueryCountByCond(c *gin.Context) {
 //@Router /test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
+	start, _ := strconv.Atoi(c.Query("start"))
+	end, _ := strconv.Atoi(c.Query("end"))
 
-	v, err := resource.CacheClient.HGetAll(name)
+	v, err := resource.CacheClient.ZRangeWithScore(name, start, end, true)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -257,21 +260,10 @@ func GetCache(c *gin.Context) {
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
+	score, _ := strconv.ParseFloat(c.Query("score"), 10)
+	value := c.Query("value")
 
-	product := model.NewProduct()
-	_, _ = resource.DBClient.QueryById(2, &product)
-
-	//value := map[string]interface{}{
-	//	"name": "tom",
-	//	"age": 18,
-	//	"job": "IT",
-	//	"money": 22.22,
-	//	"on_study": false,
-	//	"time": time.Now(),
-	//	//"product": product,
-	//}
-
-	err := resource.CacheClient.HSetJson(name, "product", product)
+	err := resource.CacheClient.ZSet(name, score, value)
 
 	if err != nil {
 		log.Error(err.Error())

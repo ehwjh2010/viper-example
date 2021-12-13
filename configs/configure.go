@@ -1,4 +1,4 @@
-package conf
+package configs
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ type Config struct {
 var Conf Config
 
 //LoadConfig 从配置文件中加载配置
-func LoadConfig() {
+func init() {
 
 	log.Debug("Start load config")
 
@@ -62,7 +62,7 @@ func ensureConfigPath() (string, error) {
 	currentDir, _ := os.Getwd()
 
 	//优先读取本地配置, 利于本地开发以及线上配置
-	localConfigPath := path.PathJoin(currentDir, "conf", "config_local.yaml")
+	localConfigPath := path.PathJoin(currentDir, "configs", "config_local.yaml")
 
 	exist, err := path.EnsurePathExist(localConfigPath)
 
@@ -96,7 +96,7 @@ func ensureConfigPath() (string, error) {
 func getEnv() string {
 	env := strings.ToLower(os.Getenv("ENV"))
 
-	if str.IsEmptyStr(env) {
+	if str.IsEmpty(env) {
 		env = "dev"
 	}
 
