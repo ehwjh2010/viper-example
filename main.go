@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/ehwjh2010/cobra-example/configs"
 	_ "github.com/ehwjh2010/cobra-example/docs"
-	"github.com/ehwjh2010/cobra-example/middleware"
-	"github.com/ehwjh2010/cobra-example/service"
+	"github.com/ehwjh2010/cobra-example/internal/middleware"
+	"github.com/ehwjh2010/cobra-example/internal/service"
 	"github.com/ehwjh2010/cobra/client"
 	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/util/object"

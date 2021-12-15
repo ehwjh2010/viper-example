@@ -3,8 +3,9 @@ package controller
 import (
 	"fmt"
 	"github.com/ehwjh2010/cobra-example/configs"
-	"github.com/ehwjh2010/cobra-example/resource"
-	"github.com/ehwjh2010/cobra-example/resource/model"
+	"github.com/ehwjh2010/cobra-example/internal/cache"
+	"github.com/ehwjh2010/cobra-example/internal/dao"
+	"github.com/ehwjh2010/cobra-example/internal/model"
 	"github.com/ehwjh2010/cobra/db/rdb"
 	"github.com/ehwjh2010/cobra/extend/ginext"
 	"github.com/ehwjh2010/cobra/extend/ginext/response"
@@ -52,7 +53,7 @@ func AddRecord(c *gin.Context) {
 		TotalCount: 10000,
 	}
 
-	err := resource.DBClient.AddRecord(&product)
+	err := dao.DBClient.AddRecord(&product)
 
 	if err != nil {
 		log.Info(err.Error())
@@ -83,7 +84,7 @@ func UpdateRecord(c *gin.Context) {
 
 	product.TotalCount = 99
 	product.Price = 9900
-	err = resource.DBClient.UpdateById(product.TableName(), int64(id), product)
+	err = dao.DBClient.UpdateById(product.TableName(), int64(id), product)
 
 	if err != nil {
 		response.Success(c, map[string]bool{"ok": false})
@@ -114,7 +115,7 @@ func QueryByIds(c *gin.Context) {
 
 	var product []model.Product
 
-	_, err = resource.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
+	_, err = dao.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
 	if err != nil {
 		//util.Fail(c, util.ResultWithCode(1000))
 		return
@@ -145,7 +146,7 @@ func QueryById(c *gin.Context) {
 
 	product := model.NewProduct()
 
-	exist, err := resource.DBClient.QueryById(int64(idInt), &product)
+	exist, err := dao.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
 		response.Fail(c, 2000, "系统错误")
 		return
@@ -189,7 +190,7 @@ func QueryByCond(c *gin.Context) {
 
 	var products []model.Product
 
-	if _, err := resource.DBClient.Query(model.NewProduct().TableName(), cond, &products); err == nil {
+	if _, err := dao.DBClient.Query(model.NewProduct().TableName(), cond, &products); err == nil {
 		response.Success(c, products)
 	} else {
 		response.Success(c, nil)
@@ -212,7 +213,7 @@ func QueryCountByCond(c *gin.Context) {
 	//cond.AddWhere(rdb.NewEqWhere("total_count", 10))
 	//cond.AddWhere(rdb.NewEqWhere("price", 30))
 
-	count, err := resource.DBClient.QueryCount(product.TableName(), cond)
+	count, err := dao.DBClient.QueryCount(product.TableName(), cond)
 
 	if err != nil {
 		response.Fail(c, 90000, "查询结果失败")
@@ -236,7 +237,7 @@ func GetCache(c *gin.Context) {
 	start, _ := strconv.Atoi(c.Query("start"))
 	end, _ := strconv.Atoi(c.Query("end"))
 
-	v, err := resource.CacheClient.ZRangeWithScore(name, start, end, true)
+	v, err := cache.RedisClient.ZRangeWithScore(name, start, end, true)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -263,7 +264,7 @@ func SetCache(c *gin.Context) {
 	score, _ := strconv.ParseFloat(c.Query("score"), 10)
 	value := c.Query("value")
 
-	err := resource.CacheClient.ZSet(name, score, value)
+	err := cache.RedisClient.ZSet(name, score, value)
 
 	if err != nil {
 		log.Error(err.Error())

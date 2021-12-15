@@ -9,5 +9,5 @@ import (
 var Middlewares = []gin.HandlerFunc{
 	middleware.AccessLog(nil, false, config.DefaultTimePattern),
 	middleware.RecoveryWithZap(),
-	middleware.Cors(middleware.OriginOpt("*")),
+	middleware.Cors(),
 }
