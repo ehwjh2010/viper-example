@@ -1,7 +1,7 @@
-package main
+package demo
 
 import (
-	"github.com/ehwjh2010/cobra-example/controller"
+	"github.com/ehwjh2010/cobra-example/server/controller"
 	"github.com/gin-gonic/gin"
 )
 

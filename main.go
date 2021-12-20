@@ -5,9 +5,10 @@ import (
 	_ "github.com/ehwjh2010/cobra-example/docs"
 	"github.com/ehwjh2010/cobra-example/internal/middleware"
 	"github.com/ehwjh2010/cobra-example/internal/service"
-	"github.com/ehwjh2010/cobra/client"
-	"github.com/ehwjh2010/cobra/extend/ginext"
-	"github.com/ehwjh2010/cobra/util/object"
+	"github.com/ehwjh2010/cobra-example/router/demo"
+	"github.com/ehwjh2010/viper/client"
+	"github.com/ehwjh2010/viper/extend/ginext"
+	"github.com/ehwjh2010/viper/util/object"
 )
 
 var setting client.Setting
@@ -27,9 +28,9 @@ var setting client.Setting
 // @host 127.0.0.1:9090
 // @BasePath /api
 func main() {
-	app := ginext.Cobra(setting)
+	app := ginext.Viper(setting)
 
-	Bind(app.Engine())
+	demo.Bind(app.Engine())
 
 	app.Run()
 }

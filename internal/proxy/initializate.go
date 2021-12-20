@@ -1,25 +1,24 @@
-package cache
+package proxy
 
 import (
 	"github.com/ehwjh2010/cobra-example/configs"
-	"github.com/ehwjh2010/cobra/db/cache"
+	"github.com/ehwjh2010/viper/db/cache"
 )
 
 var RedisClient *cache.RedisClient
 
-//LoadCache 加载缓存
+//LoadCache 载入Redis
 func LoadCache() error {
-
-	cacheClient, err := cache.InitCache(&configs.Conf.CacheConfig)
+	client, err := cache.InitCache(&configs.Conf.CacheConfig)
 	if err != nil {
 		return err
 	}
 
-	RedisClient = cacheClient
+	RedisClient = client
 	return nil
 }
 
-//CloseCache 关闭缓存
+//CloseCache 关闭Redis
 func CloseCache() error {
 	return RedisClient.Close()
 }

@@ -2,8 +2,8 @@ package dao
 
 import (
 	"github.com/ehwjh2010/cobra-example/configs"
-	"github.com/ehwjh2010/cobra/db/rdb"
-	"github.com/ehwjh2010/cobra/db/rdb/mysql"
+	"github.com/ehwjh2010/viper/db/rdb"
+	"github.com/ehwjh2010/viper/db/rdb/mysql"
 )
 
 var DBClient *rdb.DBClient

@@ -2,11 +2,11 @@ package configs
 
 import (
 	"fmt"
-	"github.com/ehwjh2010/cobra/client"
-	"github.com/ehwjh2010/cobra/log"
-	"github.com/ehwjh2010/cobra/util/file"
-	"github.com/ehwjh2010/cobra/util/path"
-	"github.com/ehwjh2010/cobra/util/str"
+	"github.com/ehwjh2010/viper/client"
+	"github.com/ehwjh2010/viper/log"
+	"github.com/ehwjh2010/viper/util/file"
+	"github.com/ehwjh2010/viper/util/path"
+	"github.com/ehwjh2010/viper/util/str"
 	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
