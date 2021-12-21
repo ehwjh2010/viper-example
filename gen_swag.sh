@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PROJECT_PATH="/Users/jh/Documents/Project/self/GoProject/cobra-example"
+PROJECT_PATH="/Users/jh/Documents/Project/self/GoProject/viper-example"
 
 SWAG_EXIST="$(command -v swag | wc -l | awk '{print $1}')"
 

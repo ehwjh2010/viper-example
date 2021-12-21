@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"github.com/ehwjh2010/cobra-example/configs"
+	"github.com/ehwjh2010/viper-example/config"
 	"github.com/ehwjh2010/viper/db/rdb"
 	"github.com/ehwjh2010/viper/db/rdb/mysql"
 )
@@ -11,7 +11,7 @@ var DBClient *rdb.DBClient
 //LoadDB 加载DB
 func LoadDB() error {
 
-	dbClient, err := mysql.InitMysql(&configs.Conf.DBConfig)
+	dbClient, err := mysql.InitMysql(&config.Conf.DBConfig)
 
 	if err != nil {
 		return err

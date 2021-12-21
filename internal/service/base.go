@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/ehwjh2010/cobra-example/internal/dao"
-	"github.com/ehwjh2010/cobra-example/internal/proxy"
+	"github.com/ehwjh2010/viper-example/internal/dao"
+	"github.com/ehwjh2010/viper-example/internal/proxy"
 )
 
 var OnStart = []func() error{

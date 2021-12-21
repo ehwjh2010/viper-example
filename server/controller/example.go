@@ -2,10 +2,10 @@ package controller
 
 import (
 	"fmt"
-	"github.com/ehwjh2010/cobra-example/configs"
-	"github.com/ehwjh2010/cobra-example/internal/dao"
-	"github.com/ehwjh2010/cobra-example/internal/model"
-	cache "github.com/ehwjh2010/cobra-example/internal/proxy"
+	"github.com/ehwjh2010/viper-example/config"
+	"github.com/ehwjh2010/viper-example/internal/dao"
+	"github.com/ehwjh2010/viper-example/internal/model"
+	cache "github.com/ehwjh2010/viper-example/internal/proxy"
 	"github.com/ehwjh2010/viper/db/rdb"
 	"github.com/ehwjh2010/viper/extend/ginext"
 	"github.com/ehwjh2010/viper/extend/ginext/response"
@@ -34,7 +34,7 @@ func Helloworld(c *gin.Context) {
 // @Success 200 {object} response.Result{data=conf.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
-	response.Success(c, configs.Conf)
+	response.Success(c, config.Conf)
 }
 
 // AddRecord 添加商品

@@ -1,11 +1,16 @@
-# cobra-example
+# viper-example
 
 # 说明
 
 ## 各module的作用
 
+### server
+对外服务层。
+* controller 提供http接口和前端交互
+* 第三方事件的监听listener, 主要是消费消息
+* grpc 提供rpc接口和后端交互
 
-### configs
+### config
 配置文件和常量配置
 
 ### controller
@@ -30,12 +35,6 @@ swagger文档
 
 ### lib
 三方包
-
-### server
-对外服务层。
-* controller 提供http接口和前端交互
-* 第三方事件的监听listener, 主要是消费消息
-* grpc 提供rpc接口和后端交互
 
 ### test
 测试用例层, 主要服务于测试同学.   (开发同学写测试用列写在core或server层)

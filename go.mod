@@ -1,4 +1,4 @@
-module github.com/ehwjh2010/cobra-example
+module github.com/ehwjh2010/viper-example
 
 go 1.17
 
@@ -64,6 +64,4 @@ require (
 	gorm.io/gorm v1.22.3 // indirect
 )
 
-replace (
-	github.com/ehwjh2010/viper => ../viper
-)
+replace github.com/ehwjh2010/viper => ../viper

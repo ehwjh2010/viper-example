@@ -1,6 +1,6 @@
 env: dev
 debug: true
-application: cobra-example
+application: viper-example
 
 host:
 port: 9090
@@ -16,7 +16,7 @@ log:
   fileDir:
   maxSize: 1
   maxAge: 7
-  localtime: false
+  localtime: true
   compress: true
 
 db:

@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type Config struct {
 	ShutDownTimeout int          `yaml:"shutDownTimeout" json:"shutDownTimeout"` //优雅重启, 接收到相关信号后, 处理请求的最长时间, 单位: 秒， 默认5s
 	Application     string       `yaml:"application" json:"application"`         //应用名
 	Debug           bool         `yaml:"debug" json:"debug"`                     //debug
-	Language        string       `json:"language" yaml:"language"`               //校验错误返回的语言
+	Language        string       `yaml:"language" json:"language"`               //校验错误返回的语言
 	Swagger         bool         `yaml:"swagger" json:"swagger"`                 //是否启动swagger
 	LogConfig       client.Log   `yaml:"log" json:"log"`
 	DBConfig        client.DB    `yaml:"db" json:"db"`
@@ -62,7 +62,7 @@ func ensureConfigPath() (string, error) {
 	currentDir, _ := os.Getwd()
 
 	//优先读取本地配置, 利于本地开发以及线上配置
-	localConfigPath := path.PathJoin(currentDir, "configs", "config_local.yaml")
+	localConfigPath := path.PathJoin(currentDir, "config", "config_local.yaml")
 
 	exist, err := path.EnsurePathExist(localConfigPath)
 
@@ -79,7 +79,7 @@ func ensureConfigPath() (string, error) {
 
 	configFileName := fmt.Sprintf("config_%s.yaml", strings.ToLower(env))
 
-	configFilePath := path.PathJoin(currentDir, "conf", configFileName)
+	configFilePath := path.PathJoin(currentDir, "config", configFileName)
 
 	exist, err = path.EnsurePathExist(configFilePath)
 

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/ehwjh2010/cobra-example/configs"
-	_ "github.com/ehwjh2010/cobra-example/docs"
-	"github.com/ehwjh2010/cobra-example/internal/middleware"
-	"github.com/ehwjh2010/cobra-example/internal/service"
-	"github.com/ehwjh2010/cobra-example/router/demo"
+	"github.com/ehwjh2010/viper-example/config"
+	_ "github.com/ehwjh2010/viper-example/docs"
+	"github.com/ehwjh2010/viper-example/internal/middleware"
+	"github.com/ehwjh2010/viper-example/internal/service"
+	"github.com/ehwjh2010/viper-example/router/demo"
 	"github.com/ehwjh2010/viper/client"
 	"github.com/ehwjh2010/viper/extend/ginext"
 	"github.com/ehwjh2010/viper/util/object"
@@ -36,7 +36,7 @@ func main() {
 }
 
 func init() {
-	object.CopyProperties(&configs.Conf, &setting)
+	object.CopyProperties(&config.Conf, &setting)
 	setting.Middlewares = middleware.Middlewares
 	setting.OnStartUp = service.OnStart
 	setting.OnShutDown = service.OnShutDown
