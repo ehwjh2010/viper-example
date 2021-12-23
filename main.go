@@ -5,7 +5,7 @@ import (
 	_ "github.com/ehwjh2010/viper-example/docs"
 	"github.com/ehwjh2010/viper-example/internal/middleware"
 	"github.com/ehwjh2010/viper-example/internal/service"
-	"github.com/ehwjh2010/viper-example/router/demo"
+	"github.com/ehwjh2010/viper-example/router"
 	"github.com/ehwjh2010/viper/client"
 	"github.com/ehwjh2010/viper/extend/ginext"
 	"github.com/ehwjh2010/viper/util/object"
@@ -30,7 +30,7 @@ var setting client.Setting
 func main() {
 	app := ginext.Viper(setting)
 
-	demo.Bind(app.Engine())
+	router.Register(app.Engine())
 
 	app.Run()
 }

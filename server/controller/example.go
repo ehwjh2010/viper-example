@@ -5,11 +5,12 @@ import (
 	"github.com/ehwjh2010/viper-example/config"
 	"github.com/ehwjh2010/viper-example/internal/dao"
 	"github.com/ehwjh2010/viper-example/internal/model"
-	cache "github.com/ehwjh2010/viper-example/internal/proxy"
+	"github.com/ehwjh2010/viper-example/internal/proxy/cache"
 	"github.com/ehwjh2010/viper/db/rdb"
 	"github.com/ehwjh2010/viper/extend/ginext"
 	"github.com/ehwjh2010/viper/extend/ginext/response"
 	"github.com/ehwjh2010/viper/log"
+	"github.com/ehwjh2010/viper/types"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -31,7 +32,7 @@ func Helloworld(c *gin.Context) {
 // @Accept json
 // @Tags project
 // @Router /test [get]
-// @Success 200 {object} response.Result{data=conf.Config}
+// @Success 200 {object} types.Result{data=config.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
 	response.Success(c, config.Conf)
@@ -43,20 +44,21 @@ func GetProjectConfig(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Tags add,product
-// @Success 200 {object} response.Result{data=model.Product} "商品数据"
+// @Success 200 {object} types.Result{data=model.Product} "商品数据"
 // @Router /test/add [get]
 func AddRecord(c *gin.Context) {
 
 	product := model.Product{
 		Name:       "Cake",
-		Price:      30,
-		TotalCount: 10000,
+		Price:      1000,
+		TotalCount: 5000,
+		Brand:      types.NewStr("华为"),
 	}
 
 	err := dao.DBClient.AddRecord(&product)
 
 	if err != nil {
-		log.Info(err.Error())
+		log.Error(err.Error())
 		response.Fail(c, 1000, "插入失败")
 		return
 	}
@@ -71,7 +73,7 @@ func AddRecord(c *gin.Context) {
 // @Produce json
 // @Tags update,product
 // @Param id query int true "商品ID"
-// @Success 200 {object} response.Result{data=map[string]bool} "商品数据"
+// @Success 200 {object} types.Result{data=map[string]bool} "商品数据"
 // @Router /test/update [get]
 func UpdateRecord(c *gin.Context) {
 	product := model.NewProduct()
@@ -100,7 +102,7 @@ func UpdateRecord(c *gin.Context) {
 // @Produce json
 // @Tags product
 // @Param id query int true "商品ID"
-// @Success 200 {object} response.Result{data=[]model.Product} "商品数据"
+// @Success 200 {object} types.Result{data=[]model.Product} "商品数据"
 // @Router /test/ids [get]
 func QueryByIds(c *gin.Context) {
 
@@ -131,7 +133,7 @@ func QueryByIds(c *gin.Context) {
 // @Produce json
 // @Tags product
 // @Param id path int true "主键"
-// @Success 200 {object} response.Result{data=model.Product} "商品数据"
+// @Success 200 {object} types.Result{data=model.Product} "商品数据"
 // @Router /test/{id} [get]
 func QueryById(c *gin.Context) {
 
@@ -169,7 +171,7 @@ func QueryById(c *gin.Context) {
 // @Param name query string false "商品名称"
 // @Param page query int true "页数"
 // @Param pageSize query int true "每页数量"
-// @Success 200 {object} response.Result{data=response.Pageable{rows=[]model.Product}} "商品数据"
+// @Success 200 {object} types.Result{data=types.Pageable{rows=[]model.Product}} "商品数据"
 // @Router /test/cond [get]
 func QueryByCond(c *gin.Context) {
 	name := c.Query("name")
@@ -203,7 +205,7 @@ func QueryByCond(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Tags product,count
-// @Success 200 {object} response.Result{data=map[string]int} "商品数量"
+// @Success 200 {object} types.Result{data=map[string]int} "商品数量"
 // @Router /test/count [get]
 func QueryCountByCond(c *gin.Context) {
 	product := model.NewProduct()
@@ -230,7 +232,7 @@ func QueryCountByCond(c *gin.Context) {
 //@Produce json
 //@Tags cache
 //@Param name query string true "缓存Key"
-//@Success 200 {object} response.Result{data=map[string]string} "商品数量"
+//@Success 200 {object} types.Result{data=map[string]string} "商品数量"
 //@Router /test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
@@ -257,7 +259,7 @@ func GetCache(c *gin.Context) {
 //@Tags cache
 //@Param name query string true "缓存Key"
 //@Param value query bool true "缓存值"
-//@Success 200 {object} response.Result{data=map[string]bool} "商品数量"
+//@Success 200 {object} types.Result{data=map[string]bool} "商品数量"
 //@Router /test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
@@ -296,7 +298,7 @@ type Address struct {
 // @Produce 	json
 // @Tags 		validate
 // @Param 		user body User true "用户姓名"
-// @Success 	200 {object} response.Result{data=map[string]bool} "校验是否成功"
+// @Success 	200 {object} types.Result{data=map[string]bool} "校验是否成功"
 // @Router 		/validate [post]
 func ValidateUser(c *gin.Context) {
 	var user User

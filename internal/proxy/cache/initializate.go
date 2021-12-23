@@ -1,4 +1,4 @@
-package proxy
+package cache
 
 import (
 	"github.com/ehwjh2010/viper-example/config"

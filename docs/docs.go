@@ -64,13 +64,13 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/conf.Config"
+                                            "$ref": "#/definitions/config.Config"
                                         }
                                     }
                                 }
@@ -100,7 +100,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -144,7 +144,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -198,7 +198,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -258,7 +258,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -266,7 +266,7 @@ var doc = `{
                                         "data": {
                                             "allOf": [
                                                 {
-                                                    "$ref": "#/definitions/response.Pageable"
+                                                    "$ref": "#/definitions/types.Pageable"
                                                 },
                                                 {
                                                     "type": "object",
@@ -309,7 +309,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -356,7 +356,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -404,7 +404,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -451,7 +451,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -483,55 +483,12 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "用户姓名",
-                        "name": "name",
+                        "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/controller.User"
                         }
-                    },
-                    {
-                        "description": "年龄",
-                        "name": "age",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "密码",
-                        "name": "pwd",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "确认密码",
-                        "name": "checkPwd",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "用户地址",
-                        "name": "addr",
-                        "in": "body",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/controller.Address"
-                            }
-                        }
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "缓存值",
-                        "name": "value",
-                        "in": "query",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -540,7 +497,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Result"
+                                    "$ref": "#/definitions/types.Result"
                                 },
                                 {
                                     "type": "object",
@@ -584,12 +541,20 @@ var doc = `{
                     "description": "Redis IP",
                     "type": "string"
                 },
-                "maxFreeConnCount": {
-                    "description": "最大闲置连接数",
+                "maxConnAge": {
+                    "description": "连接存活最大时长, 单位: 分钟",
                     "type": "integer"
                 },
                 "maxOpenConnCount": {
-                    "description": "最大连接数",
+                    "description": "最大连接数, 默认是每核10个连接",
+                    "type": "integer"
+                },
+                "maxRetries": {
+                    "description": "最大尝试次数, 默认是3",
+                    "type": "integer"
+                },
+                "minFreeConnCount": {
+                    "description": "最小闲置连接数",
                     "type": "integer"
                 },
                 "port": {
@@ -603,6 +568,10 @@ var doc = `{
                 "readTimeout": {
                     "description": "读取超时时间, 单位: 秒",
                     "type": "integer"
+                },
+                "user": {
+                    "description": "用户",
+                    "type": "string"
                 },
                 "writeTimeout": {
                     "description": "写超时时间, 单位: 秒",
@@ -708,7 +677,7 @@ var doc = `{
                 }
             }
         },
-        "conf.Config": {
+        "config.Config": {
             "type": "object",
             "properties": {
                 "application": {
@@ -731,6 +700,10 @@ var doc = `{
                 },
                 "host": {
                     "description": "地址",
+                    "type": "string"
+                },
+                "language": {
+                    "description": "校验错误返回的语言",
                     "type": "string"
                 },
                 "log": {
@@ -768,6 +741,33 @@ var doc = `{
                 }
             }
         },
+        "controller.User": {
+            "type": "object",
+            "required": [
+                "age",
+                "name"
+            ],
+            "properties": {
+                "addr": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.Address"
+                    }
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "checkPwd": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pwd": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Product": {
             "type": "object",
             "properties": {
@@ -794,7 +794,7 @@ var doc = `{
                 }
             }
         },
-        "response.Pageable": {
+        "types.Pageable": {
             "type": "object",
             "properties": {
                 "hasNext": {
@@ -822,7 +822,7 @@ var doc = `{
                 }
             }
         },
-        "response.Result": {
+        "types.Result": {
             "type": "object",
             "properties": {
                 "code": {
