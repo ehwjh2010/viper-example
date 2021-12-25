@@ -2,17 +2,18 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/ehwjh2010/viper-example/config"
 	"github.com/ehwjh2010/viper-example/internal/dao"
 	"github.com/ehwjh2010/viper-example/internal/model"
 	cache "github.com/ehwjh2010/viper-example/internal/proxy"
 	"github.com/ehwjh2010/viper/db/rdb"
-	"github.com/ehwjh2010/viper/extend/ginext"
-	"github.com/ehwjh2010/viper/extend/ginext/response"
+	"github.com/ehwjh2010/viper/frame/ginext"
+	"github.com/ehwjh2010/viper/frame/ginext/response"
 	"github.com/ehwjh2010/viper/log"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
 )
 
 // Helloworld 测试接口

@@ -7,7 +7,7 @@ import (
 	"github.com/ehwjh2010/viper-example/internal/service"
 	"github.com/ehwjh2010/viper-example/router/demo"
 	"github.com/ehwjh2010/viper/client"
-	"github.com/ehwjh2010/viper/extend/ginext"
+	"github.com/ehwjh2010/viper/frame/ginext"
 	"github.com/ehwjh2010/viper/util/object"
 )
 

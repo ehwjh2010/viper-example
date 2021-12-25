@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/ehwjh2010/viper/extend/ginext/middleware"
+	"github.com/ehwjh2010/viper/frame/ginext/middleware"
 	"github.com/ehwjh2010/viper/global"
 	"github.com/gin-gonic/gin"
 )
