@@ -17,11 +17,17 @@ definitions:
       host:
         description: Redis IP
         type: string
-      maxFreeConnCount:
-        description: 最大闲置连接数
+      maxConnAge:
+        description: '连接存活最大时长, 单位: 分钟'
         type: integer
       maxOpenConnCount:
-        description: 最大连接数
+        description: 最大连接数, 默认是每核10个连接
+        type: integer
+      maxRetries:
+        description: 最大尝试次数, 默认是3
+        type: integer
+      minFreeConnCount:
+        description: 最小闲置连接数
         type: integer
       port:
         description: Redis 端口
@@ -32,6 +38,9 @@ definitions:
       readTimeout:
         description: '读取超时时间, 单位: 秒'
         type: integer
+      user:
+        description: 用户
+        type: string
       writeTimeout:
         description: '写超时时间, 单位: 秒'
         type: integer
@@ -108,7 +117,7 @@ definitions:
         description: 日志是否被分割
         type: boolean
     type: object
-  conf.Config:
+  config.Config:
     properties:
       application:
         description: 应用名
@@ -125,6 +134,9 @@ definitions:
         type: string
       host:
         description: 地址
+        type: string
+      language:
+        description: 校验错误返回的语言
         type: string
       log:
         $ref: '#/definitions/client.Log'
@@ -150,6 +162,24 @@ definitions:
     - province
     - street
     type: object
+  controller.User:
+    properties:
+      addr:
+        items:
+          $ref: '#/definitions/controller.Address'
+        type: array
+      age:
+        type: integer
+      checkPwd:
+        type: string
+      name:
+        type: string
+      pwd:
+        type: string
+    required:
+    - age
+    - name
+    type: object
   model.Product:
     properties:
       brand:
@@ -167,7 +197,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  response.Pageable:
+  types.Pageable:
     properties:
       hasNext:
         description: HasNext 是否还有下一页
@@ -187,7 +217,7 @@ definitions:
         description: TotalPage 总页数
         type: integer
     type: object
-  response.Result:
+  types.Result:
     properties:
       code:
         description: Code 业务状态码
@@ -234,10 +264,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/conf.Config'
+                  $ref: '#/definitions/config.Config'
               type: object
       summary: GetProjectConfig
       tags:
@@ -260,7 +290,7 @@ paths:
           description: 商品数据
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   $ref: '#/definitions/model.Product'
@@ -280,7 +310,7 @@ paths:
           description: 商品数据
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   $ref: '#/definitions/model.Product'
@@ -307,7 +337,7 @@ paths:
           description: 商品数量
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   additionalProperties:
@@ -340,7 +370,7 @@ paths:
           description: 商品数量
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   additionalProperties:
@@ -377,11 +407,11 @@ paths:
           description: 商品数据
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   allOf:
-                  - $ref: '#/definitions/response.Pageable'
+                  - $ref: '#/definitions/types.Pageable'
                   - properties:
                       rows:
                         items:
@@ -404,7 +434,7 @@ paths:
           description: 商品数量
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   additionalProperties:
@@ -433,7 +463,7 @@ paths:
           description: 商品数据
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   items:
@@ -461,7 +491,7 @@ paths:
           description: 商品数据
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   additionalProperties:
@@ -480,38 +510,10 @@ paths:
       parameters:
       - description: 用户姓名
         in: body
-        name: name
+        name: user
         required: true
         schema:
-          type: string
-      - description: 年龄
-        in: body
-        name: age
-        required: true
-        schema:
-          type: integer
-      - description: 密码
-        in: body
-        name: pwd
-        schema:
-          type: string
-      - description: 确认密码
-        in: body
-        name: checkPwd
-        schema:
-          type: string
-      - description: 用户地址
-        in: body
-        name: addr
-        schema:
-          items:
-            $ref: '#/definitions/controller.Address'
-          type: array
-      - description: 缓存值
-        in: query
-        name: value
-        required: true
-        type: boolean
+          $ref: '#/definitions/controller.User'
       produces:
       - application/json
       responses:
@@ -519,7 +521,7 @@ paths:
           description: 校验是否成功
           schema:
             allOf:
-            - $ref: '#/definitions/response.Result'
+            - $ref: '#/definitions/types.Result'
             - properties:
                 data:
                   additionalProperties:

@@ -2,15 +2,15 @@ package service
 
 import (
 	"github.com/ehwjh2010/viper-example/internal/dao"
-	"github.com/ehwjh2010/viper-example/internal/proxy"
+	"github.com/ehwjh2010/viper-example/internal/proxy/cache"
 )
 
 var OnStart = []func() error{
 	dao.LoadDB,
-	proxy.LoadCache,
+	cache.LoadCache,
 }
 
 var OnShutDown = []func() error{
 	dao.CloseDB,
-	proxy.CloseCache,
+	cache.CloseCache,
 }
