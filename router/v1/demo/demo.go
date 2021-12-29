@@ -5,16 +5,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterDemo(engine *gin.Engine) {
-
-	api := engine.Group("/api")
+func RegisterDemo(r *gin.RouterGroup) {
 
 	{
-		api.GET("/helloworld", controller.Helloworld)
-		api.POST("/validate", controller.ValidateUser)
+		r.GET("/helloworld", controller.Helloworld)
+		r.POST("/validate", controller.ValidateUser)
+		r.GET("/task/count", controller.RoutineInfo)
+		r.POST("/task", controller.BackgroundTask)
 	}
 
-	test := api.Group("/test")
+	test := r.Group("/test")
 
 	{
 		test.GET("", controller.GetProjectConfig)

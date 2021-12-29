@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/ehwjh2010/viper/routine"
+	"go.uber.org/zap"
 
 	"github.com/ehwjh2010/viper-example/config"
 	"github.com/ehwjh2010/viper-example/internal/dao"
@@ -120,7 +124,7 @@ func QueryByIds(c *gin.Context) {
 
 	_, err = dao.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
 	if err != nil {
-		//util.Fail(c, util.ResultWithCode(1000))
+		//helper.Fail(c, util.ResultWithCode(1000))
 		return
 	}
 
@@ -311,4 +315,28 @@ func ValidateUser(c *gin.Context) {
 	log.Info(fmt.Sprintf("%+v", user))
 
 	response.Success(c, map[string]bool{"ok": true})
+}
+
+func BackgroundTask(c *gin.Context) {
+	if err := routine.AddTask(func() {
+		log.Info("start task!!!")
+		time.Sleep(5 * time.Second)
+		//log.Info("sleep 5 seconds finished...")
+		panic("test task panic")
+	}); err != nil {
+		log.Error("add task failed!", zap.Error(err))
+	}
+
+	response.Success(c, true)
+}
+
+func RoutineInfo(c *gin.Context) {
+	countInfo, err := routine.CountInfo()
+	if err != nil {
+		log.Error("query count failed", zap.Error(err))
+		response.Fail(c, 10001, "query count failed")
+		return
+	}
+
+	response.Success(c, countInfo)
 }

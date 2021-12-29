@@ -2,14 +2,15 @@ package config
 
 import (
 	"fmt"
-	"github.com/ehwjh2010/viper/client"
-	"github.com/ehwjh2010/viper/log"
-	"github.com/ehwjh2010/viper/util/file"
-	"github.com/ehwjh2010/viper/util/path"
-	"github.com/ehwjh2010/viper/util/str"
-	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
+
+	"github.com/ehwjh2010/viper/client"
+	"github.com/ehwjh2010/viper/helper/file"
+	"github.com/ehwjh2010/viper/helper/path"
+	"github.com/ehwjh2010/viper/helper/str"
+	"github.com/ehwjh2010/viper/log"
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
@@ -21,6 +22,7 @@ type Config struct {
 	Debug           bool         `yaml:"debug" json:"debug"`                     //debug
 	Language        string       `yaml:"language" json:"language"`               //校验错误返回的语言
 	Swagger         bool         `yaml:"swagger" json:"swagger"`                 //是否启动swagger
+	EnableRtePool   bool         `yaml:"enableRtePool" json:"enableRtePool"`     //启用协程池
 	LogConfig       client.Log   `yaml:"log" json:"log"`
 	DBConfig        client.DB    `yaml:"db" json:"db"`
 	CacheConfig     client.Cache `yaml:"cache" json:"cache"`

@@ -11,7 +11,7 @@ var DBClient *rdb.DBClient
 //LoadDB 加载DB
 func LoadDB() error {
 
-	dbClient, err := mysql.InitMysql(&config.Conf.DBConfig)
+	dbClient, err := mysql.SetUp(&config.Conf.DBConfig)
 
 	if err != nil {
 		return err
