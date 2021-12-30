@@ -26,7 +26,7 @@ var setting client.Setting
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host 127.0.0.1:9090
-// @BasePath /api
+// @BasePath /viper-example/api
 func main() {
 	app := ginext.Viper(setting)
 

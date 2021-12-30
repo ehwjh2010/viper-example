@@ -26,7 +26,7 @@ import (
 // @Description helloworld
 // @Tags helloworld
 // @Success 200 {string} helloworld
-// @Router	/helloworld [get]
+// @Router	/v1/helloworld [get]
 func Helloworld(c *gin.Context) {
 	c.JSON(http.StatusOK, "helloworld")
 }
@@ -36,7 +36,7 @@ func Helloworld(c *gin.Context) {
 // @Description 获取项目配置
 // @Accept json
 // @Tags project
-// @Router /test [get]
+// @Router /v1/test [get]
 // @Success 200 {object} types.Result{data=config.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
@@ -50,7 +50,7 @@ func GetProjectConfig(c *gin.Context) {
 // @Produce json
 // @Tags add,product
 // @Success 200 {object} types.Result{data=model.Product} "商品数据"
-// @Router /test/add [get]
+// @Router /v1/test/add [get]
 func AddRecord(c *gin.Context) {
 
 	product := model.Product{
@@ -79,7 +79,7 @@ func AddRecord(c *gin.Context) {
 // @Tags update,product
 // @Param id query int true "商品ID"
 // @Success 200 {object} types.Result{data=map[string]bool} "商品数据"
-// @Router /test/update [get]
+// @Router /v1/test/update [get]
 func UpdateRecord(c *gin.Context) {
 	product := model.NewProduct()
 
@@ -108,7 +108,7 @@ func UpdateRecord(c *gin.Context) {
 // @Tags product
 // @Param id query int true "商品ID"
 // @Success 200 {object} types.Result{data=[]model.Product} "商品数据"
-// @Router /test/ids [get]
+// @Router /v1/test/ids [get]
 func QueryByIds(c *gin.Context) {
 
 	id := c.Query("id")
@@ -139,7 +139,7 @@ func QueryByIds(c *gin.Context) {
 // @Tags product
 // @Param id path int true "主键"
 // @Success 200 {object} types.Result{data=model.Product} "商品数据"
-// @Router /test/{id} [get]
+// @Router /v1/test/{id} [get]
 func QueryById(c *gin.Context) {
 
 	id := c.Param("id")
@@ -177,7 +177,7 @@ func QueryById(c *gin.Context) {
 // @Param page query int true "页数"
 // @Param pageSize query int true "每页数量"
 // @Success 200 {object} types.Result{data=types.Pageable{rows=[]model.Product}} "商品数据"
-// @Router /test/cond [get]
+// @Router /v1/test/cond [get]
 func QueryByCond(c *gin.Context) {
 	name := c.Query("name")
 
@@ -211,7 +211,7 @@ func QueryByCond(c *gin.Context) {
 // @Produce json
 // @Tags product,count
 // @Success 200 {object} types.Result{data=map[string]int} "商品数量"
-// @Router /test/count [get]
+// @Router /v1/test/count [get]
 func QueryCountByCond(c *gin.Context) {
 	product := model.NewProduct()
 
@@ -238,7 +238,7 @@ func QueryCountByCond(c *gin.Context) {
 //@Tags cache
 //@Param name query string true "缓存Key"
 //@Success 200 {object} types.Result{data=map[string]string} "商品数量"
-//@Router /test/cache/get [get]
+//@Router /v1/test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	start, _ := strconv.Atoi(c.Query("start"))
@@ -265,7 +265,7 @@ func GetCache(c *gin.Context) {
 //@Param name query string true "缓存Key"
 //@Param value query bool true "缓存值"
 //@Success 200 {object} types.Result{data=map[string]bool} "商品数量"
-//@Router /test/cache/set [get]
+//@Router /v1/test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
 	score, _ := strconv.ParseFloat(c.Query("score"), 10)
@@ -304,7 +304,7 @@ type Address struct {
 // @Tags 		validate
 // @Param 		user body User true "用户姓名"
 // @Success 	200 {object} types.Result{data=map[string]bool} "校验是否成功"
-// @Router 		/validate [post]
+// @Router 		/v1/validate [post]
 func ValidateUser(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {

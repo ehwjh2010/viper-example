@@ -16,9 +16,9 @@
         "version": "1.0"
     },
     "host": "127.0.0.1:9090",
-    "basePath": "/api",
+    "basePath": "/viper-example/api",
     "paths": {
-        "/helloworld": {
+        "/v1/helloworld": {
             "get": {
                 "description": "helloworld",
                 "tags": [
@@ -34,7 +34,7 @@
                 }
             }
         },
-        "/test": {
+        "/v1/test": {
             "get": {
                 "description": "获取项目配置",
                 "consumes": [
@@ -66,7 +66,7 @@
                 }
             }
         },
-        "/test/add": {
+        "/v1/test/add": {
             "get": {
                 "description": "添加商品",
                 "consumes": [
@@ -102,7 +102,7 @@
                 }
             }
         },
-        "/test/cache/get": {
+        "/v1/test/cache/get": {
             "get": {
                 "description": "查缓存",
                 "consumes": [
@@ -149,7 +149,7 @@
                 }
             }
         },
-        "/test/cache/set": {
+        "/v1/test/cache/set": {
             "get": {
                 "description": "设置缓存",
                 "consumes": [
@@ -203,7 +203,7 @@
                 }
             }
         },
-        "/test/cond": {
+        "/v1/test/cond": {
             "get": {
                 "description": "通过条件查询",
                 "consumes": [
@@ -275,7 +275,7 @@
                 }
             }
         },
-        "/test/count": {
+        "/v1/test/count": {
             "get": {
                 "description": "查询数量",
                 "consumes": [
@@ -314,7 +314,7 @@
                 }
             }
         },
-        "/test/ids": {
+        "/v1/test/ids": {
             "get": {
                 "description": "通过ID列表查询",
                 "consumes": [
@@ -361,7 +361,7 @@
                 }
             }
         },
-        "/test/update": {
+        "/v1/test/update": {
             "get": {
                 "description": "更新商品",
                 "consumes": [
@@ -409,7 +409,7 @@
                 }
             }
         },
-        "/test/{id}": {
+        "/v1/test/{id}": {
             "get": {
                 "description": "通过ID查询",
                 "consumes": [
@@ -453,7 +453,7 @@
                 }
             }
         },
-        "/validate": {
+        "/v1/validate": {
             "post": {
                 "description": "测试校验器",
                 "consumes": [
@@ -678,6 +678,10 @@
                 },
                 "debug": {
                     "description": "debug",
+                    "type": "boolean"
+                },
+                "enableRtePool": {
+                    "description": "启用协程池",
                     "type": "boolean"
                 },
                 "env": {
