@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/ehwjh2010/viper/db/rdb"
-	"github.com/ehwjh2010/viper/types"
+	"github.com/ehwjh2010/viper/helper/types"
 )
 
 type Product struct {

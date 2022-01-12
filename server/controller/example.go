@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ehwjh2010/viper/helper/file"
+	"github.com/ehwjh2010/viper/helper/requests"
 	"github.com/ehwjh2010/viper/routine"
 	"go.uber.org/zap"
 
@@ -16,9 +18,16 @@ import (
 	"github.com/ehwjh2010/viper/db/rdb"
 	"github.com/ehwjh2010/viper/frame/ginext"
 	"github.com/ehwjh2010/viper/frame/ginext/response"
+	"github.com/ehwjh2010/viper/helper/types"
 	"github.com/ehwjh2010/viper/log"
-	"github.com/ehwjh2010/viper/types"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	InsertFailed      = types.NewErrResp(20000, "插入记录失败")
+	QueryByIdFailed   = types.NewErrResp(20001, "通过ID查询失败")
+	QueryFailed       = types.NewErrResp(20002, "查询失败")
+	HTTPRequestFailed = types.NewErrResp(20003, "HTTP 请求失败")
 )
 
 // Helloworld 测试接口
@@ -64,7 +73,7 @@ func AddRecord(c *gin.Context) {
 
 	if err != nil {
 		log.Error(err.Error())
-		response.Fail(c, 1000, "插入失败")
+		response.FailWithResult(c, InsertFailed)
 		return
 	}
 
@@ -124,7 +133,7 @@ func QueryByIds(c *gin.Context) {
 
 	_, err = dao.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
 	if err != nil {
-		//helper.Fail(c, util.ResultWithCode(1000))
+		response.FailWithResult(c, QueryByIdFailed)
 		return
 	}
 
@@ -155,7 +164,7 @@ func QueryById(c *gin.Context) {
 
 	exist, err := dao.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
-		response.Fail(c, 2000, "系统错误")
+		response.FailWithResult(c, QueryByIdFailed)
 		return
 	}
 
@@ -223,7 +232,7 @@ func QueryCountByCond(c *gin.Context) {
 	count, err := dao.DBClient.QueryCount(product.TableName(), cond)
 
 	if err != nil {
-		response.Fail(c, 90000, "查询结果失败")
+		response.FailWithResult(c, QueryFailed)
 		return
 	} else {
 		response.Success(c, map[string]int64{"count": count})
@@ -339,4 +348,40 @@ func RoutineInfo(c *gin.Context) {
 	}
 
 	response.Success(c, countInfo)
+}
+
+func APIClient(c *gin.Context) {
+	cli := requests.HTTPClient{}
+
+	pngFile, _ := file.OpenFileWithAppend(`/Users/jh/Desktop/test-data/picture-rect-04.png`)
+
+	defer pngFile.Close()
+
+	resp, err := cli.Post("http://127.0.0.1:8080/upload",
+		requests.RWithParams(map[string]string{"product": "banana", "price": "$22"}),
+		requests.RWithFile(requests.FileUpload{
+			FileName:     `picture-rect-04.png`,
+			FileContents: pngFile,
+		}),
+	)
+	if err != nil || resp.Error() != nil {
+		response.FailWithResult(c, HTTPRequestFailed)
+		return
+	}
+
+	if resp.OK() {
+
+		dst := make(map[string]interface{})
+		_ = resp.Json(&dst)
+
+		if err != nil {
+			response.FailWithResult(c, HTTPRequestFailed)
+			return
+		} else {
+			response.Success(c, dst)
+			return
+		}
+	}
+
+	response.Success(c, true)
 }
