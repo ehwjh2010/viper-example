@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ehwjh2010/viper/helper/file"
+	"github.com/ehwjh2010/viper/helper/requests"
 	"github.com/ehwjh2010/viper/routine"
 	"go.uber.org/zap"
 
@@ -16,9 +18,16 @@ import (
 	"github.com/ehwjh2010/viper/db/rdb"
 	"github.com/ehwjh2010/viper/frame/ginext"
 	"github.com/ehwjh2010/viper/frame/ginext/response"
+	"github.com/ehwjh2010/viper/helper/types"
 	"github.com/ehwjh2010/viper/log"
-	"github.com/ehwjh2010/viper/types"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	InsertFailed      = types.NewErrResp(20000, "插入记录失败")
+	QueryByIdFailed   = types.NewErrResp(20001, "通过ID查询失败")
+	QueryFailed       = types.NewErrResp(20002, "查询失败")
+	HTTPRequestFailed = types.NewErrResp(20003, "HTTP 请求失败")
 )
 
 // Helloworld 测试接口
@@ -26,7 +35,7 @@ import (
 // @Description helloworld
 // @Tags helloworld
 // @Success 200 {string} helloworld
-// @Router	/helloworld [get]
+// @Router	/v1/helloworld [get]
 func Helloworld(c *gin.Context) {
 	c.JSON(http.StatusOK, "helloworld")
 }
@@ -36,7 +45,7 @@ func Helloworld(c *gin.Context) {
 // @Description 获取项目配置
 // @Accept json
 // @Tags project
-// @Router /test [get]
+// @Router /v1/test [get]
 // @Success 200 {object} types.Result{data=config.Config}
 func GetProjectConfig(c *gin.Context) {
 	log.Info("你好")
@@ -50,7 +59,7 @@ func GetProjectConfig(c *gin.Context) {
 // @Produce json
 // @Tags add,product
 // @Success 200 {object} types.Result{data=model.Product} "商品数据"
-// @Router /test/add [get]
+// @Router /v1/test/add [get]
 func AddRecord(c *gin.Context) {
 
 	product := model.Product{
@@ -64,7 +73,7 @@ func AddRecord(c *gin.Context) {
 
 	if err != nil {
 		log.Error(err.Error())
-		response.Fail(c, 1000, "插入失败")
+		response.FailWithResult(c, InsertFailed)
 		return
 	}
 
@@ -79,7 +88,7 @@ func AddRecord(c *gin.Context) {
 // @Tags update,product
 // @Param id query int true "商品ID"
 // @Success 200 {object} types.Result{data=map[string]bool} "商品数据"
-// @Router /test/update [get]
+// @Router /v1/test/update [get]
 func UpdateRecord(c *gin.Context) {
 	product := model.NewProduct()
 
@@ -108,7 +117,7 @@ func UpdateRecord(c *gin.Context) {
 // @Tags product
 // @Param id query int true "商品ID"
 // @Success 200 {object} types.Result{data=[]model.Product} "商品数据"
-// @Router /test/ids [get]
+// @Router /v1/test/ids [get]
 func QueryByIds(c *gin.Context) {
 
 	id := c.Query("id")
@@ -124,7 +133,7 @@ func QueryByIds(c *gin.Context) {
 
 	_, err = dao.DBClient.QueryByIds([]int64{int64(idInt)}, &product)
 	if err != nil {
-		//helper.Fail(c, util.ResultWithCode(1000))
+		response.FailWithResult(c, QueryByIdFailed)
 		return
 	}
 
@@ -139,7 +148,7 @@ func QueryByIds(c *gin.Context) {
 // @Tags product
 // @Param id path int true "主键"
 // @Success 200 {object} types.Result{data=model.Product} "商品数据"
-// @Router /test/{id} [get]
+// @Router /v1/test/{id} [get]
 func QueryById(c *gin.Context) {
 
 	id := c.Param("id")
@@ -155,7 +164,7 @@ func QueryById(c *gin.Context) {
 
 	exist, err := dao.DBClient.QueryById(int64(idInt), &product)
 	if err != nil {
-		response.Fail(c, 2000, "系统错误")
+		response.FailWithResult(c, QueryByIdFailed)
 		return
 	}
 
@@ -177,7 +186,7 @@ func QueryById(c *gin.Context) {
 // @Param page query int true "页数"
 // @Param pageSize query int true "每页数量"
 // @Success 200 {object} types.Result{data=types.Pageable{rows=[]model.Product}} "商品数据"
-// @Router /test/cond [get]
+// @Router /v1/test/cond [get]
 func QueryByCond(c *gin.Context) {
 	name := c.Query("name")
 
@@ -211,7 +220,7 @@ func QueryByCond(c *gin.Context) {
 // @Produce json
 // @Tags product,count
 // @Success 200 {object} types.Result{data=map[string]int} "商品数量"
-// @Router /test/count [get]
+// @Router /v1/test/count [get]
 func QueryCountByCond(c *gin.Context) {
 	product := model.NewProduct()
 
@@ -223,7 +232,7 @@ func QueryCountByCond(c *gin.Context) {
 	count, err := dao.DBClient.QueryCount(product.TableName(), cond)
 
 	if err != nil {
-		response.Fail(c, 90000, "查询结果失败")
+		response.FailWithResult(c, QueryFailed)
 		return
 	} else {
 		response.Success(c, map[string]int64{"count": count})
@@ -238,7 +247,7 @@ func QueryCountByCond(c *gin.Context) {
 //@Tags cache
 //@Param name query string true "缓存Key"
 //@Success 200 {object} types.Result{data=map[string]string} "商品数量"
-//@Router /test/cache/get [get]
+//@Router /v1/test/cache/get [get]
 func GetCache(c *gin.Context) {
 	name := c.Query("name")
 	start, _ := strconv.Atoi(c.Query("start"))
@@ -265,7 +274,7 @@ func GetCache(c *gin.Context) {
 //@Param name query string true "缓存Key"
 //@Param value query bool true "缓存值"
 //@Success 200 {object} types.Result{data=map[string]bool} "商品数量"
-//@Router /test/cache/set [get]
+//@Router /v1/test/cache/set [get]
 func SetCache(c *gin.Context) {
 	name := c.Query("name")
 	score, _ := strconv.ParseFloat(c.Query("score"), 10)
@@ -304,7 +313,7 @@ type Address struct {
 // @Tags 		validate
 // @Param 		user body User true "用户姓名"
 // @Success 	200 {object} types.Result{data=map[string]bool} "校验是否成功"
-// @Router 		/validate [post]
+// @Router 		/v1/validate [post]
 func ValidateUser(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -339,4 +348,40 @@ func RoutineInfo(c *gin.Context) {
 	}
 
 	response.Success(c, countInfo)
+}
+
+func APIClient(c *gin.Context) {
+	cli := requests.HTTPClient{}
+
+	pngFile, _ := file.OpenFileWithAppend(`/Users/jh/Desktop/test-data/picture-rect-04.png`)
+
+	defer pngFile.Close()
+
+	resp, err := cli.Post("http://127.0.0.1:8080/upload",
+		requests.RWithParams(map[string]string{"product": "banana", "price": "$22"}),
+		requests.RWithFile(requests.FileUpload{
+			FileName:     `picture-rect-04.png`,
+			FileContents: pngFile,
+		}),
+	)
+	if err != nil || resp.Error() != nil {
+		response.FailWithResult(c, HTTPRequestFailed)
+		return
+	}
+
+	if resp.OK() {
+
+		dst := make(map[string]interface{})
+		_ = resp.Json(&dst)
+
+		if err != nil {
+			response.FailWithResult(c, HTTPRequestFailed)
+			return
+		} else {
+			response.Success(c, dst)
+			return
+		}
+	}
+
+	response.Success(c, true)
 }

@@ -1,4 +1,4 @@
-basePath: /api
+basePath: /viper-example/api
 definitions:
   client.Cache:
     properties:
@@ -129,6 +129,9 @@ definitions:
       debug:
         description: debug
         type: boolean
+      enableRtePool:
+        description: 启用协程池
+        type: boolean
       env:
         description: 环境标识
         type: string
@@ -244,7 +247,7 @@ info:
   title: CobraExample API
   version: "1.0"
 paths:
-  /helloworld:
+  /v1/helloworld:
     get:
       description: helloworld
       responses:
@@ -254,7 +257,7 @@ paths:
             type: string
       tags:
       - helloworld
-  /test:
+  /v1/test:
     get:
       consumes:
       - application/json
@@ -272,7 +275,7 @@ paths:
       summary: GetProjectConfig
       tags:
       - project
-  /test/{id}:
+  /v1/test/{id}:
     get:
       consumes:
       - application/json
@@ -298,7 +301,7 @@ paths:
       summary: QueryById
       tags:
       - product
-  /test/add:
+  /v1/test/add:
     get:
       consumes:
       - application/json
@@ -319,7 +322,7 @@ paths:
       tags:
       - add
       - product
-  /test/cache/get:
+  /v1/test/cache/get:
     get:
       consumes:
       - application/json
@@ -347,7 +350,7 @@ paths:
       summary: GetCache
       tags:
       - cache
-  /test/cache/set:
+  /v1/test/cache/set:
     get:
       consumes:
       - application/json
@@ -380,7 +383,7 @@ paths:
       summary: SetCache
       tags:
       - cache
-  /test/cond:
+  /v1/test/cond:
     get:
       consumes:
       - application/json
@@ -422,7 +425,7 @@ paths:
       summary: QueryByCond
       tags:
       - product
-  /test/count:
+  /v1/test/count:
     get:
       consumes:
       - application/json
@@ -445,7 +448,7 @@ paths:
       tags:
       - product
       - count
-  /test/ids:
+  /v1/test/ids:
     get:
       consumes:
       - application/json
@@ -473,7 +476,7 @@ paths:
       summary: QueryByIds
       tags:
       - product
-  /test/update:
+  /v1/test/update:
     get:
       consumes:
       - application/json
@@ -502,7 +505,7 @@ paths:
       tags:
       - update
       - product
-  /validate:
+  /v1/validate:
     post:
       consumes:
       - application/json

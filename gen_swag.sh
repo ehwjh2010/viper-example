@@ -3,7 +3,6 @@
 PROJECT_PATH="${PROJECT_PATH}"
 if [ "$PROJECT_PATH" == "" ]; then
   PROJECT_PATH="$(pwd)"
-  echo "11111"
 fi
 
 echo $PROJECT_PATH

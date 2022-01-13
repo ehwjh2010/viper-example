@@ -12,6 +12,7 @@ func RegisterDemo(r *gin.RouterGroup) {
 		r.POST("/validate", controller.ValidateUser)
 		r.GET("/task/count", controller.RoutineInfo)
 		r.POST("/task", controller.BackgroundTask)
+		r.GET("/request", controller.APIClient)
 	}
 
 	test := r.Group("/test")

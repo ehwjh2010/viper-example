@@ -9,7 +9,7 @@ var RedisClient *cache.RedisClient
 
 //LoadCache 载入Redis
 func LoadCache() error {
-	client, err := cache.SetUp(&config.Conf.CacheConfig)
+	client, err := cache.SetUp(config.Conf.CacheConfig)
 	if err != nil {
 		return err
 	}

@@ -32,7 +32,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/helloworld": {
+        "/v1/helloworld": {
             "get": {
                 "description": "helloworld",
                 "tags": [
@@ -48,7 +48,7 @@ var doc = `{
                 }
             }
         },
-        "/test": {
+        "/v1/test": {
             "get": {
                 "description": "获取项目配置",
                 "consumes": [
@@ -80,7 +80,7 @@ var doc = `{
                 }
             }
         },
-        "/test/add": {
+        "/v1/test/add": {
             "get": {
                 "description": "添加商品",
                 "consumes": [
@@ -116,7 +116,7 @@ var doc = `{
                 }
             }
         },
-        "/test/cache/get": {
+        "/v1/test/cache/get": {
             "get": {
                 "description": "查缓存",
                 "consumes": [
@@ -163,7 +163,7 @@ var doc = `{
                 }
             }
         },
-        "/test/cache/set": {
+        "/v1/test/cache/set": {
             "get": {
                 "description": "设置缓存",
                 "consumes": [
@@ -217,7 +217,7 @@ var doc = `{
                 }
             }
         },
-        "/test/cond": {
+        "/v1/test/cond": {
             "get": {
                 "description": "通过条件查询",
                 "consumes": [
@@ -289,7 +289,7 @@ var doc = `{
                 }
             }
         },
-        "/test/count": {
+        "/v1/test/count": {
             "get": {
                 "description": "查询数量",
                 "consumes": [
@@ -328,7 +328,7 @@ var doc = `{
                 }
             }
         },
-        "/test/ids": {
+        "/v1/test/ids": {
             "get": {
                 "description": "通过ID列表查询",
                 "consumes": [
@@ -375,7 +375,7 @@ var doc = `{
                 }
             }
         },
-        "/test/update": {
+        "/v1/test/update": {
             "get": {
                 "description": "更新商品",
                 "consumes": [
@@ -423,7 +423,7 @@ var doc = `{
                 }
             }
         },
-        "/test/{id}": {
+        "/v1/test/{id}": {
             "get": {
                 "description": "通过ID查询",
                 "consumes": [
@@ -467,7 +467,7 @@ var doc = `{
                 }
             }
         },
-        "/validate": {
+        "/v1/validate": {
             "post": {
                 "description": "测试校验器",
                 "consumes": [
@@ -694,6 +694,10 @@ var doc = `{
                     "description": "debug",
                     "type": "boolean"
                 },
+                "enableRtePool": {
+                    "description": "启用协程池",
+                    "type": "boolean"
+                },
                 "env": {
                     "description": "环境标识",
                     "type": "string"
@@ -856,7 +860,7 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
 	Host:        "127.0.0.1:9090",
-	BasePath:    "/api",
+	BasePath:    "/viper-example/api",
 	Schemes:     []string{},
 	Title:       "CobraExample API",
 	Description: "Cobra使用示例",
