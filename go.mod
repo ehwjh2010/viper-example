@@ -3,7 +3,7 @@ module github.com/ehwjh2010/viper-example
 go 1.17
 
 require (
-	github.com/ehwjh2010/viper v1.1.3
+	github.com/ehwjh2010/viper v1.1.4
 	github.com/gin-gonic/gin v1.7.4
 	github.com/swaggo/swag v1.7.4
 	go.uber.org/zap v1.19.1
