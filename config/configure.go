@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ehwjh2010/viper/client"
+	"github.com/ehwjh2010/viper/client/settings"
 	"github.com/ehwjh2010/viper/helper/file"
 	"github.com/ehwjh2010/viper/helper/path"
 	"github.com/ehwjh2010/viper/helper/str"
@@ -14,18 +14,18 @@ import (
 )
 
 type Config struct {
-	Env             string       `yaml:"env" json:"env"`                         //环境标识
-	Host            string       `yaml:"host" json:"host"`                       //地址
-	Port            int          `yaml:"port" json:"port"`                       //端口
-	ShutDownTimeout int          `yaml:"shutDownTimeout" json:"shutDownTimeout"` //优雅重启, 接收到相关信号后, 处理请求的最长时间, 单位: 秒， 默认5s
-	Application     string       `yaml:"application" json:"application"`         //应用名
-	Debug           bool         `yaml:"debug" json:"debug"`                     //debug
-	Language        string       `yaml:"language" json:"language"`               //校验错误返回的语言
-	Swagger         bool         `yaml:"swagger" json:"swagger"`                 //是否启动swagger
-	EnableRtePool   bool         `yaml:"enableRtePool" json:"enableRtePool"`     //启用协程池
-	LogConfig       client.Log   `yaml:"log" json:"log"`
-	DBConfig        client.DB    `yaml:"db" json:"db"`
-	CacheConfig     client.Cache `yaml:"cache" json:"cache"`
+	Env             string         `yaml:"env" json:"env"`                         //环境标识
+	Host            string         `yaml:"host" json:"host"`                       //地址
+	Port            int            `yaml:"port" json:"port"`                       //端口
+	ShutDownTimeout int            `yaml:"shutDownTimeout" json:"shutDownTimeout"` //优雅重启, 接收到相关信号后, 处理请求的最长时间, 单位: 秒， 默认5s
+	Application     string         `yaml:"application" json:"application"`         //应用名
+	Debug           bool           `yaml:"debug" json:"debug"`                     //debug
+	Language        string         `yaml:"language" json:"language"`               //校验错误返回的语言
+	Swagger         bool           `yaml:"swagger" json:"swagger"`                 //是否启动swagger
+	EnableRtePool   bool           `yaml:"enableRtePool" json:"enableRtePool"`     //启用协程池
+	LogConfig       settings.Log   `yaml:"log" json:"log"`
+	DBConfig        settings.DB    `yaml:"db" json:"db"`
+	CacheConfig     settings.Cache `yaml:"cache" json:"cache"`
 }
 
 var Conf Config

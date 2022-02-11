@@ -6,12 +6,12 @@ import (
 	"github.com/ehwjh2010/viper-example/internal/middleware"
 	"github.com/ehwjh2010/viper-example/internal/service"
 	"github.com/ehwjh2010/viper-example/router"
-	"github.com/ehwjh2010/viper/client"
+	"github.com/ehwjh2010/viper/client/settings"
 	"github.com/ehwjh2010/viper/frame/ginext"
 	"github.com/ehwjh2010/viper/helper/object"
 )
 
-var setting client.Setting
+var setting settings.Setting
 
 // @title CobraExample API
 // @version 1.0
