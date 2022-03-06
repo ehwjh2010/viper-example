@@ -3,7 +3,7 @@ module github.com/ehwjh2010/viper-example
 go 1.17
 
 require (
-	github.com/ehwjh2010/viper v1.1.4
+	github.com/ehwjh2010/viper v1.1.8
 	github.com/gin-gonic/gin v1.7.4
 	github.com/swaggo/swag v1.7.4
 	go.uber.org/zap v1.19.1
@@ -14,6 +14,7 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/avast/retry-go v3.0.0+incompatible // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gin-contrib/cors v1.3.1 // indirect
@@ -58,7 +59,7 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
-	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
@@ -66,5 +67,3 @@ require (
 	gorm.io/driver/postgres v1.2.2 // indirect
 	gorm.io/gorm v1.22.3 // indirect
 )
-
-replace github.com/ehwjh2010/viper => ../viper

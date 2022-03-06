@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ehwjh2010/viper/component/routine"
+
+	"github.com/ehwjh2010/viper/component/requests"
 	"github.com/ehwjh2010/viper/helper/file"
-	"github.com/ehwjh2010/viper/helper/requests"
-	"github.com/ehwjh2010/viper/routine"
 	"go.uber.org/zap"
 
 	"github.com/ehwjh2010/viper-example/config"
@@ -190,8 +191,8 @@ func QueryById(c *gin.Context) {
 func QueryByCond(c *gin.Context) {
 	name := c.Query("name")
 
-	//page, _ := strconv.Atoi(c.Query("page"))
-	//pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
 	cond := rdb.NewQueryCondition()
 
 	//cond.SetPage(page).SetPageSize(pageSize).AddSort(rdb.NewDescOrder("price"))
@@ -202,7 +203,7 @@ func QueryByCond(c *gin.Context) {
 	//
 	//cond.AddWhere(w)
 
-	cond.AddWhere(rdb.NewLeftLikeWhere("name", name))
+	cond.AddWhere(rdb.NewLikeWhere("name", name)).SetPage(page).SetPageSize(pageSize)
 
 	var products []model.Product
 
@@ -359,12 +360,12 @@ func APIClient(c *gin.Context) {
 
 	resp, err := cli.Post("http://127.0.0.1:8080/upload",
 		requests.RWithParams(map[string]string{"product": "banana", "price": "$22"}),
-		requests.RWithFile(requests.FileUpload{
+		requests.RWithFile(&requests.FileUpload{
 			FileName:     `picture-rect-04.png`,
 			FileContents: pngFile,
 		}),
 	)
-	if err != nil || resp.Error() != nil {
+	if err != nil {
 		response.FailWithResult(c, HTTPRequestFailed)
 		return
 	}
